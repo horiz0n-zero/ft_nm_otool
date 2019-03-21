@@ -1,0 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   binary_errors.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/21 13:28:24 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/03/21 14:00:05 by afeuerst         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "binarylib.h"
+
+static const char		*g_errors[] =
+{
+	[OPEN_FAILED] = "%s: No such file or directory."
+};
+
+static char				*error_push_format(char *dst, const char type, int64_t data)
+{
+	char				*ptr;
+
+	if (type == 's')
+	{
+		ptr = (void*)data;
+		while (*ptr)
+			*dst++ = *ptr++;
+	}
+	return (dst);
+}
+
+void					*binary_error(const int id, char **const error,
+		int64_t arg1, int64_t arg2)
+{
+	static char			buffer[1024];
+	char				*dst;
+	char				*src;
+	int64_t				args[2];
+	int64_t				*args_ptr;
+
+	args[0] = arg1;
+	args[1] = arg2;
+	args_ptr = args;
+	dst = buffer;
+	src = g_errors[id];
+	*error = buffer;
+	while (*src)
+	{
+		if (*src == '%' && src++)
+			dst = error_push_format(dst, *++src, *args_ptr++);
+		else
+			*dst++ = *src++;
+	}
+	*dst = 0;
+	return (NULL);
+}
