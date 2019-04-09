@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_nm.h                                            :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/09 13:24:51 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/09 10:59:05 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/09 10:59:59 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_NM_H
-# define FT_NM_H
+#include "machoreader_shared.h"
 
-# include "machoreader.h"
-
-struct						s_nm
+size_t			ft_strlen(const char *const src)
 {
-	int						flags;
-	char					*in;
-	char					*out;
-};
+	size_t		i;
 
-#endif
+	i = 0;
+	while (src[i])
+		i++;
+	return (i);
+}

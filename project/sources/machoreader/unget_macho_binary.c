@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_nm.h                                            :+:      :+:    :+:   */
+/*   unget_macho_binary.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/09 13:24:51 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/09 14:23:22 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/09 14:49:52 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_NM_H
-# define FT_NM_H
+#include "machoreader.h"
 
-# include "machoreader.h"
-
-struct						s_nm
+void						unget_macho_binary(struct s_macho_binary *const binary)
 {
-	int						flags;
-	char					*in;
-	char					*out;
-};
-
-#endif
+	if (binary)
+	{
+		if (binary->content && binary->content != MAP_FAILED)
+			munmap((void*)binary->content, binary->content_size);
+		// for each macho in 0..<count
+		free(binary);
+	}
+}

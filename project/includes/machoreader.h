@@ -1,24 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   binarylib.h                                        :+:      :+:    :+:   */
+/*   machoreader.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/21 12:41:57 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/03/21 14:02:34 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/09 14:48:28 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BINARYLIB_H
-# define BINARYLIB_H
+#ifndef MACHOREADER_H
+# define MACHOREADER_H
 
-# include <unistd.h> // close - write
-# include <stdlib.h> // malloc - free
-# include <fcntl.h> // open
-# include <sys/stat.h> // fstat
-# include <sys/mman.h> // mmap - munmap
-
+# include "machoreader_shared.h"
 # include <mach-o/arch.h>
 # include <mach-o/compact_unwind_encoding.h>
 # include <mach-o/dyld.h>
@@ -33,19 +28,26 @@
 # include <mach-o/stab.h>
 # include <mach-o/swap.h>
 
-typedef struct s_binary_file		t_binary_file;
-
-struct								s_binary_file
+struct											s_macho_binary
 {
-	void							*content;
-	size_t							size;
+	const char									*file;
+	const char									*content;
+	size_t										content_size;
+	const char									*error;
+	struct s_macho								*macho;
+	int											count;
 };
 
-struct s_binary_file				*binary_parse_file(const char *const path, char **const error);
-void								binary_destroy_file(struct s_binary_file *const file);
+struct											s_macho
+{
+	int											is32;
+};
 
+struct s_macho_binary							*get_macho_binary(const char *file);
+void											unget_macho_binary(struct s_macho_binary *const binary);
 
-void								*binary_error(const int id, char **const error, int64_t arg1, int64_t arg2);
-# define OPEN_FAILED 0
+extern const void								*get_object(struct s_macho_binary *const binary, const void *const seek, const size_t size);
+
+# define OBJECT(type, binary, seek) (type*)get_object(binary, seek, sizeof(type))
 
 #endif

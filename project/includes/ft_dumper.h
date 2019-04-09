@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_nm.h                                            :+:      :+:    :+:   */
+/*   ft_dumper.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/09 13:24:51 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/09 11:03:53 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_NM_H
-# define FT_NM_H
+#ifndef FT_DUMPER_H
+# define FT_DUMPER_H
 
 # include "machoreader.h"
-
-struct						s_nm
-{
-	int						flags;
-	char					*in;
-	char					*out;
-};
 
 #endif

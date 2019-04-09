@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_nm.h                                            :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/09 13:24:51 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/09 11:00:03 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/09 11:01:06 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_NM_H
-# define FT_NM_H
+#include "machoreader_shared.h"
 
-# include "machoreader.h"
-
-struct						s_nm
+int				ft_strcmp(const char *s1, const char *s2)
 {
-	int						flags;
-	char					*in;
-	char					*out;
-};
-
-#endif
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((int)(*s1 - *s2));
+}

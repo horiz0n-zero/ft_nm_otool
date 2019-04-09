@@ -6,16 +6,17 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 12:38:47 by afeuerst          #+#    #+#              #
-#    Updated: 2019/03/21 14:01:20 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/09 11:50:14 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 OBJECTS_LOCATION = ./objects/
 INCLUDES = ./includes/
 
-BINARY_LIBRARY = $(OBJECTS_LOCATION)binarylib.a
-BINARY_SOURCES = $(shell find ./sources/binarylib -type f | grep "\.c")
-BINARY_INCLUDES = $(INCLUDES)binarylib.h
+MACHOREADER_LIBRARY = $(OBJECTS_LOCATION)machoreader.a
+MACHOREADER_SOURCES = $(shell find ./sources/machoreader/ -type f | grep "\.c")
+MACHOREADER_OBJECTS = $(MACHOREADER_SOURCES:.c=.o)
+MACHOREADER_INCLUDES = $(INCLUDES)machoreader.h
 
 FT_NM = ft_nm
 FT_NM_SOURCES = $(shell find ./sources/ft_nm -type f | grep "\.c")
@@ -25,23 +26,36 @@ FT_OTOOL = ft_otool
 FT_OTOOL_SOURCES = $(shell find ./sources/ft_otool -type f | grep "\.c")
 FT_OTOOL_INCLUDES = $(INCLUDES)ft_otool.h
 
+FT_DUMPER = ft_dumper
+FT_DUMPER_SOURCES = $(shell find ./sources/ft_dumper -type f | grep "\.c")
+FT_DUMPER_INCLUDES = $(INCLUDES)ft_dumper.h
+
 FLAGS = -O0 -g
+FLAGS_MACHOREADER_OBJECTS = -c
+FLAGS_MACHOREADER = -r -arch $(shell uname -m)
 
-all: $(BINARY_LIBRARY) $(FT_NM) $(FT_OTOOL)
+all: $(MACHOREADER_LIBRARY) $(FT_NM) $(FT_OTOOL) $(FT_DUMPER)
 
-$(BINARY_LIBRARY): $(BINARY_SOURCES) $(BINARY_INCLUDES)
-	clang -I $(INCLUDES) $(BINARY_SOURCES) $(FLAGS) -c -o $(BINARY_LIBRARY)
+$(MACHOREADER_LIBRARY): $(MACHOREADER_SOURCES) $(MACHOREADER_INCLUDES) $(MACHOREADER_OBJECTS)
+	ld $(addprefix $(OBJECTS_LOCATION), $(notdir $(MACHOREADER_OBJECTS))) $(FLAGS_MACHOREADER) -o $(MACHOREADER_LIBRARY)
 
-$(FT_NM): $(FT_NM_SOURCES) $(FT_NM_INCLUDES) $(BINARY_LIBRARY)
-	clang -I $(INCLUDES) $(BINARY_LIBRARY) $(FT_NM_SOURCES) $(FLAGS) -o $(FT_NM)
+%.o: %.c
+	clang -I $(INCLUDES) $(FLAGS_MACHOREADER_OBJECTS) -o $(OBJECTS_LOCATION)$(notdir $@) $<
 
-$(FT_OTOOL): $(FT_OTOOL_SOURCES) $(FT_OTOOL_INCLUDES) $(BINARY_LIBRARY)
-	clang -I $(INCLUDES) $(BINARY_LIBRARY) $(FT_OTOOL_SOURCES) $(FLAGS) -o $(FT_OTOOL)
+$(FT_NM): $(FT_NM_SOURCES) $(FT_NM_INCLUDES) $(MACHOREADER_LIBRARY)
+	clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_NM_SOURCES) $(FLAGS) -o $(FT_NM)
+
+$(FT_OTOOL): $(FT_OTOOL_SOURCES) $(FT_OTOOL_INCLUDES) $(MACHOREADER_LIBRARY)
+	clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_OTOOL_SOURCES) $(FLAGS) -o $(FT_OTOOL)
+
+$(FT_DUMPER): $(FT_DUMPER_SOURCES) $(FT_DUMPER_INCLUDES) $(MACHOREADER_LIBRARY)
+	clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_DUMPER_SOURCES) $(FLAGS) -o $(FT_DUMPER)
 
 clean:
-	rm -rf $(BINARY_LIBRARY).dSYM $(FT_NM).dSYM $(FT_OTOOL).dSYM
+	rm -rf $(MACHOREADER_LIBRARY).dSYM $(FT_NM).dSYM $(FT_OTOOL).dSYM $(FT_DUMPER).dSYM
+	rm -rf $(addprefix $(OBJECTS_LOCATION), $(notdir $(MACHOREADER_OBJECTS)))
 
 fclean: clean
-	rm -rf $(BINARY_LIBRARY) $(FT_NM) $(FT_OTOOL)
+	rm -rf $(MACHOREADER_LIBRARY) $(FT_NM) $(FT_OTOOL) $(FT_DUMPER)
 
 re: fclean all
