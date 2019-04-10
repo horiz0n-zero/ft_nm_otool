@@ -1,24 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unget_macho_binary.c                               :+:      :+:    :+:   */
+/*   fatalerror.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/09 14:23:22 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/10 13:44:17 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/10 10:38:23 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/10 11:10:41 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "machoreader.h"
+#include "machoreader_shared.h"
 
-void						unget_macho_binary(struct s_macho_binary *const binary)
+void			fatalerror(const char *const error)
 {
-	if (binary)
-	{
-		if (binary->content && binary->content != MAP_FAILED)
-			munmap((void*)binary->content, binary->content_size);
-		// for each macho in 0..<count
-		free(binary);
-	}
+	write(STDERR_FILENO, error, ft_strlen(error));
+	exit(EXIT_FAILURE);
 }
