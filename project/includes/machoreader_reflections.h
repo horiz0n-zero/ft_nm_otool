@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/11 15:37:19 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/12 15:49:20 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <mach-o/reloc.h>
 # include <mach-o/stab.h>
 # include <mach-o/swap.h>
+# include <ar.h>
 
 struct									s_cputype_reflection
 {

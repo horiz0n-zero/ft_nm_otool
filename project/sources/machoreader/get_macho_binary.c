@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 13:54:05 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/11 14:22:36 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/12 12:51:37 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static inline void				read_macho_binary_file(struct s_macho_binary *const binary
 		return (set_error(binary, "size < fat header"));
 	if (read_fat_header(binary, fat))
 		return ;
-	binary->macho = malloc(sizeof(struct s_macho));
+	binary->macho = ft_memalloc(sizeof(struct s_macho));
 	binary->count = 1;
 	read_macho_header(binary, binary->macho);
 }
@@ -71,10 +71,8 @@ struct s_macho_binary			*get_macho_binary(const char *file)
 	const int					fd = open(file, O_RDONLY);
 	struct stat					buf;
 
-	binary = malloc(sizeof(struct s_macho_binary));
+	binary = ft_memalloc(sizeof(struct s_macho_binary));
 	binary->file = file;
-	binary->error = NULL;
-	binary->macho = NULL;
 	if (fd < 0)
 		binary->error = "file not found";
 	else

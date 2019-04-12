@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 14:55:12 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/11 16:34:24 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/12 10:57:27 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,37 @@ static const char				*g_lc[] =
 	"LC_LAZY_LOAD_DYLIB",
 	"LC_ENCRYPTION_INFO",
 	"LC_DYLD_INFO",
-	"LC_DYLD_INFO_ONLY",
 	"LC_LOAD_UPWARD_DYLIB",
 	"LC_VERSION_MIN_MACOSX",
 	"LC_VERSION_MIN_IPHONEOS",
 	"LC_FUNCTION_STARTS",
-	"LC_DYLD_ENVIRONMENT"
+	"LC_DYLD_ENVIRONMENT",
+	"LC_MAIN",
+	"LC_DATA_IN_CODE",
+	"LC_SOURCE_VERSION",
+	"LC_DYLIB_CODE_SIGN_DRS",
+	"LC_ENCRYPTION_INFO_64",
+	"LC_LINKER_OPTION",
+	"LC_LINKER_OPTIMIZATION_HINT",
+	"LC_VERSION_MIN_TVOS",
+	"LC_VERSION_MIN_WATCHOS",
+	"LC_NOTE",
+	"LC_BUILD_VERSION"
 };
 
 const char						*get_lc(const uint32_t cmd)
 {
-	printf("#%d\n", (cmd & ~LC_REQ_DYLD) >= (sizeof(g_lc) / sizeof(g_lc[0])));
-	if ((cmd & ~LC_REQ_DYLD) >= (sizeof(g_lc) / sizeof(g_lc[0])))
+	int							c;
+
+	if (cmd & LC_REQ_DYLD)
+	{
+		if (cmd == LC_DYLD_INFO_ONLY)
+			return ("LC_DYLD_INFO_ONLY");
+		c = (int)((cmd & ~LC_REQ_DYLD)) - 1;
+	}
+	else
+		c = (int)cmd - 1;
+	if (c >= (sizeof(g_lc) / sizeof(g_lc[0])) || c < 0)
 		return (NULL);
-	return (g_lc[cmd & ~LC_REQ_DYLD]);
+	return (g_lc[c]);
 }

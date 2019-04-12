@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/10 14:37:26 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/12 15:56:51 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@
 
 size_t								ft_strlen(const char *const src);
 int									ft_strcmp(const char *s1, const char *s2);
+int									ft_strncmp(const void *const p1, const void *const p2, int length);
 void								mem_swap32(void *const content, size_t size);
 void								mem_swap64(void *const content, size_t size);
+void								*ft_memalloc(size_t size);
 
 void								fatalerror(const char *const error);
 
