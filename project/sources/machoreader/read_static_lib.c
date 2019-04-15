@@ -6,32 +6,84 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 15:31:55 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/12 17:39:36 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/15 11:57:13 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
 
-static void				*check_static_lib_longname(struct s_macho_binary *const binary)
+static void						read_static_lib_object(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho,
+		struct s_staticlib_macho *const staticmacho,
+		const uint32_t ran_off)
 {
-	if (!GETO(binary, binary->position, SYMDEF_64_SORTED))
-		return (set_error_nil(binary, "size < SYMDEF max"));
-	if (!ft_strcmp(binary->position, SYMDEF))
-		printf("SYMDEF");
-	else if (!ft_strcmp(binary->position, SYMDEF_SORTED))
-		printf("SYMDEF S");
-	else if (!ft_strcmp(binary->position, SYMDEF_64))
-		printf("SYMDEF 64");
-	else if (!ft_strcmp(binary->position, SYMDEF_64_SORTED))
-		printf("SYMDEF 64 S");
-	else
-		return (binary);
+	struct ar_hdr				*header;
+	size_t						len;
+	static int					count_call = 0;
+
+	if (!(setoffset_object(binary, (size_t)ran_off)))
+		return (set_error(binary, "bad ran_off"));
+	if (binary->isfat)
+		printf("@(%d) -> %d\n", get_macho_index(binary, macho), binary->count);
+	if (!(header = getset_object(binary, &binary->position, sizeof(struct ar_hdr))))
+		return (set_error(binary, "header <"));
+	if (!get_object(binary, binary->position, sizeof(struct mach_header_64)))
+		return (set_error(binary, "header < + string")); // protection
+	len = ft_strlen(binary->position);
+	staticmacho->name = binary->position;
+	binary->position = (((char*)binary->position) + len);
+	while (!*(char*)binary->position)
+		binary->position = (((char*)binary->position) + 1);
+	printf("ran_off(%u) (%d), max:(%d) %s\n", ran_off, count_call++, macho->statics_count, staticmacho->name);
+	fflush(stdout);
+	staticmacho->macho = ft_memalloc(sizeof(struct s_macho));
+	read_macho_header(binary, staticmacho->macho);
 }
 
-void					read_static_lib(struct s_macho_binary *const binary,
+static void						read_static_lib_iter(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho,
+		struct ranlib *ptr, void *const end_ptr)
+{
+	int							index;
+	struct s_staticlib_macho	*new;
+
+	macho->statics_count = 0;
+	while ((ptrdiff_t)ptr < (ptrdiff_t)end_ptr)
+	{
+		if (!got_statics(macho->statics, ptr->ran_off))
+		{
+			new = add_statics(binary, macho, macho->statics);
+			new->ran = ptr;
+			read_static_lib_object(binary, macho, new, ptr->ran_off);
+		}
+		ptr++;
+	}
+}
+
+static void						read_static_lib_symbol_table(
+		struct s_macho_binary *const binary,
 		struct s_macho *const macho)
 {
-	struct ar_hdr		*header;
+	uint32_t					size;
+
+	if (!align_object(binary, sizeof(uint64_t)))
+		return (set_error(binary, "cannot align after symdef"));
+	if (!get_object(binary, binary->position, sizeof(uint32_t)))
+		return (set_error(binary, "cannot read symbol table size"));
+	size = *(uint32_t*)binary->position;
+	set_object(binary, sizeof(uint32_t));
+	if (!get_object(binary, binary->position, (size_t)size))
+		return (set_error(binary, "bad symbol table size readed from static lib"));
+	read_static_lib_iter(binary, macho, binary->position, (((char*)binary->position) + size));
+}
+
+void							read_static_lib(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho)
+{
+	struct ar_hdr				*header;
 
 	if (!(header = GETSETO(binary, &binary->position, struct ar_hdr)))
 		return (set_error(binary, "size < struct ar_hdr"));
@@ -40,7 +92,18 @@ void					read_static_lib(struct s_macho_binary *const binary,
 	if (!GETO(binary, binary->position, ARFMAG) || ft_strncmp(binary->position, ARFMAG, sizeof(ARFMAG) - 1))
 		return (set_error(binary, "size < ar_fmag"));
 	SET(binary, sizeof(ARFMAG) - 1);
-	printf("%s\n", binary->position);
-	if (!(check_static_lib_longname(binary)))
-		return ;
+	if (!GETO(binary, binary->position, SYMDEF_64_SORTED))
+		return (set_error(binary, "size < SYMDEF max"));
+	if (!ft_strncmp(binary->position, SYMDEF_64_SORTED, sizeof(SYMDEF_64_SORTED) - 1))
+		SETO(binary, SYMDEF_64_SORTED);
+	else if (!ft_strncmp(binary->position, SYMDEF_64, sizeof(SYMDEF_64) - 1))
+		SETO(binary, SYMDEF_64);
+	else if (!ft_strncmp(binary->position, SYMDEF_SORTED, sizeof(SYMDEF_SORTED) - 1))
+		SETO(binary, SYMDEF_SORTED);
+	else if (!ft_strncmp(binary->position, SYMDEF, sizeof(SYMDEF) - 1))
+		SETO(binary, SYMDEF);
+	else
+		return (set_error(binary, "no symdef found."));
+	// + align zero ?
+	read_static_lib_symbol_table(binary, macho);
 }

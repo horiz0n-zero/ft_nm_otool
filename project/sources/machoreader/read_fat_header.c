@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:22:35 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/12 14:26:34 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/15 10:23:51 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int							read_fat_header(struct s_macho_binary *const binary,
 	if (header->magic == FAT_MAGIC || header->magic == FAT_CIGAM)
 	{
 		binary->is32 = 1;
+		binary->isfat = 1;
 		if ((binary->isswap = (header->magic == FAT_CIGAM) ? 1 : 0))
 			MSWAP32(binary->content, struct fat_header);
 		SETO(binary, struct fat_header);
@@ -57,6 +58,7 @@ int							read_fat_header(struct s_macho_binary *const binary,
 	else if (header->magic == FAT_MAGIC_64 || header->magic == FAT_CIGAM_64)
 	{
 		binary->is32 = 0;
+		binary->isfat = 1;
 		if ((binary->isswap = (header->magic == FAT_CIGAM_64) ? 1 : 0))
 			MSWAP64(binary->content, struct fat_header);
 		SETO(binary, struct fat_header);

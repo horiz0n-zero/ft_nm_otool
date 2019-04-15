@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:11:30 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/12 13:15:55 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/14 13:01:05 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,14 @@ inline void					*align_object(struct s_macho_binary *const binary,
 	register char			*ptr;
 	register char *const	end_ptr = ((char*)binary->content) + binary->content_size;
 
-	printf("align (start): %p - %lld\n", binary->position, (long long)binary->position % (long long)alignment);
 	if (alignment)
 	{
 		ptr = binary->position;
 		while ((size_t)ptr % alignment)
 			ptr++;
 		if (ptr >= end_ptr)
-			return (set_error_nil(binary, "size < required alignment"));
+			return (NULL);
 		binary->position = ptr;
-		printf("align (start): %p - %lld\n", binary->position, (long long)binary->position % (long long)alignment);
 	}
 	return (binary->position);
 }

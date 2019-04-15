@@ -6,7 +6,7 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 12:38:47 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/10 11:05:58 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/13 13:33:23 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ FT_DUMPER = ft_dumper
 FT_DUMPER_SOURCES = $(shell find ./sources/ft_dumper -type f | grep "\.c")
 FT_DUMPER_INCLUDES = $(INCLUDES)ft_dumper.h
 
-FLAGS = -O0 -g -fsanitize=address
+FLAGS = -O0 -g -fsanitize=address -Wno-format
 FLAGS_MACHOREADER_OBJECTS = -c $(FLAGS)
 FLAGS_MACHOREADER = -r -arch $(shell uname -m)
 
