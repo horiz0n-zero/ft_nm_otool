@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 15:31:55 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 11:57:13 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:14:19 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@ static void						read_static_lib_object(
 {
 	struct ar_hdr				*header;
 	size_t						len;
-	static int					count_call = 0;
 
-	if (!(setoffset_object(binary, (size_t)ran_off)))
-		return (set_error(binary, "bad ran_off"));
 	if (binary->isfat)
-		printf("@(%d) -> %d\n", get_macho_index(binary, macho), binary->count);
+	{
+		if (!setoffset_object(binary, (size_t)ran_off + get_fat_arch_offset(binary, get_macho_index(binary, macho))))
+			return (set_error(binary, "bad fat_arch offset"));
+	}
+	else if (!setoffset_object(binary, (size_t)ran_off))
+		return (set_error(binary, "bad ran_off < size"));
 	if (!(header = getset_object(binary, &binary->position, sizeof(struct ar_hdr))))
 		return (set_error(binary, "header <"));
 	if (!get_object(binary, binary->position, sizeof(struct mach_header_64)))
@@ -35,7 +37,7 @@ static void						read_static_lib_object(
 	binary->position = (((char*)binary->position) + len);
 	while (!*(char*)binary->position)
 		binary->position = (((char*)binary->position) + 1);
-	printf("ran_off(%u) (%d), max:(%d) %s\n", ran_off, count_call++, macho->statics_count, staticmacho->name);
+	printf("ran_off:(%u) max:(%d) %s\n", ran_off, macho->statics_count, staticmacho->name);
 	fflush(stdout);
 	staticmacho->macho = ft_memalloc(sizeof(struct s_macho));
 	read_macho_header(binary, staticmacho->macho);

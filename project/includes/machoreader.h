@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 10:23:20 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/15 13:57:00 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ void											read_macho_header(struct s_macho_binary *const binary, struct s_m
 void											read_static_lib(struct s_macho_binary *const binary, struct s_macho *const macho);
 int												got_statics(struct s_staticlib_macho *statics, const uint32_t ran_off);
 void											*add_statics(struct s_macho_binary *const binary, struct s_macho *const macho, struct s_staticlib_macho *statics);
+int												get_macho_index(struct s_macho_binary *const binary, struct s_macho *const macho);
+size_t											get_fat_arch_offset(struct s_macho_binary *const binary, int offindex);
 
 extern void										*get_object(struct s_macho_binary *const binary, void *const seek, const size_t size);
 extern void										set_object(struct s_macho_binary *const binary, const size_t size);

@@ -6,13 +6,37 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 09:02:24 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 11:57:15 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/15 14:00:45 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
 
-int								get_macho_index
+size_t							get_fat_arch_offset(struct s_macho_binary *const binary, int offindex)
+{
+	setoffset_object(binary, sizeof(struct fat_header));
+	if (binary->is32)
+		return ((size_t)((struct fat_arch*)binary->position)[offindex].offset);
+	return ((size_t)((struct fat_arch_64*)binary->position)[offindex].offset);
+}
+
+int								get_macho_index(struct s_macho_binary *const binary,
+		struct s_macho *const m)
+{
+	int							index;
+	struct s_macho				*current;
+
+	current = binary->macho;
+	index = 0;
+	while (index < binary->count)
+	{
+		if (current == m)
+			return (index);
+		index++;
+		current++;
+	}
+	return (0);
+}
 
 void							*add_statics(
 		struct s_macho_binary *const binary,
