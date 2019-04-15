@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/12 15:49:20 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/15 15:16:02 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ struct									s_cputype_reflection
 	const char							*reflection;
 };
 
-struct									s_cpusubtype_in_reflection
+struct									s_cpusubtype_in
 {
 	cpu_subtype_t						value;
 	const char							*reflection;
@@ -43,7 +43,8 @@ struct									s_cpusubtype_in_reflection
 struct									s_cpusubtype_reflection
 {
 	cpu_type_t							value;
-	struct s_cpusubtype_in_reflection	*values;
+	int									index;
+	int									count;
 };
 
 const char								*get_cputype(const cpu_type_t cputype);
