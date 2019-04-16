@@ -6,26 +6,40 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:21:01 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/12 15:57:52 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/16 15:41:57 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
 
-static void							macho_read_segment(struct s_macho_binary *const binary,
+static void							macho_read_segment(
+		struct s_macho_binary *const binary,
 		struct s_macho *const macho,
 		struct s_loadcommand *const loadc, const uint32_t type)
 {
+	void *const						position = binary->position;
+
 	if (type == LC_SEGMENT_64 || type == LC_SEGMENT)
 	{
 		loadc->segments = ft_memalloc(sizeof(struct s_segment));
 		if (macho->is32)
-			loadc->segments->name = AS(loadc->content, struct segment_command)->segname;
+		{
+			loadc->segments->name = ((struct segment_command*)loadc->content)->segname;
+			if (macho->isswap)
+				swap_sc(loadc->content);
+			loadc->segments->count = (int)((struct segment_command*)loadc->content)->nsects;
+		}
 		else
-			loadc->segments->name = AS(loadc->content, struct segment_command_64)->segname;
+		{
+			loadc->segments->name = ((struct segment_command_64*)loadc->content)->segname;
+			if (macho->isswap)
+				swap_sc64(loadc->content);
+			loadc->segments->count = (int)((struct segment_command_64*)loadc->content)->nsects;
+		}
+		if (loadc->segments->count)
+			read_macho_segment_sections(binary, macho, loadc);
+		binary->position = position;
 	}
-	else
-		loadc->segments = NULL;
 }
 
 static void							macho_read_lc(struct s_macho_binary *const binary,

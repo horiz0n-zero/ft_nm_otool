@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 15:16:02 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/16 17:38:40 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,10 @@ struct									s_flags32_reflection
 };
 const char								*get_macho_header_flags(const uint32_t flags);
 const char								*get_macho_filetype(const uint32_t type);
+
+extern void								swap_sc(struct segment_command *const sc);
+extern void								swap_sc64(struct segment_command_64 *const sc);
+extern void								swap_section32(struct section *const sec);
+extern void								swap_section64(struct section_64 *const sec);
 
 #endif

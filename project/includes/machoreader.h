@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 14:19:07 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/16 15:39:56 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,9 @@ struct											s_staticlib_macho
 struct											s_segment
 {
 	char										*name;
+	int											count;
+	int											pad;
+	void										*sections;
 };
 struct											s_loadcommand
 {
@@ -78,6 +81,7 @@ void											unget_macho_binary(struct s_macho_binary *const binary);
 
 int												read_fat_header(struct s_macho_binary *const binary, struct fat_header *const header);
 void											read_macho_header(struct s_macho_binary *const binary, struct s_macho *const macho);
+void											read_macho_segment_sections(struct s_macho_binary *const binary, struct s_macho *const macho, struct s_loadcommand *const loadc);
 void											read_static_lib(struct s_macho_binary *const binary, struct s_macho *const macho);
 int												got_statics(struct s_staticlib_macho *statics, const uint32_t ran_off);
 void											*add_statics(struct s_macho_binary *const binary, struct s_macho *const macho, struct s_staticlib_macho *statics);
