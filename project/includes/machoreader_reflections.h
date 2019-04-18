@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/16 17:38:40 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 13:52:12 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,11 @@ struct									s_cpusubtype_reflection
 	int									count;
 };
 
-const char								*get_cputype(const cpu_type_t cputype);
-const char								*get_cpusubtype(const cpu_type_t type, const cpu_subtype_t cpusubtype);
+const char								*get_cputype(
+		const cpu_type_t cputype);
+const char								*get_cpusubtype(
+		const cpu_type_t type,
+		const cpu_subtype_t cpusubtype);
 
 struct									s_32_reflection
 {
@@ -56,21 +59,29 @@ struct									s_32_reflection
 	const char							*reflection;
 };
 
-const char								*get_magic(const uint32_t magic);
+const char								*get_magic(
+		const uint32_t magic);
 
-const char								*get_lc(const uint32_t cmd);
+const char								*get_lc(
+		const uint32_t cmd);
 
 struct									s_flags32_reflection
 {
 	const char							*reflection;
 	const uint32_t						value;
 };
-const char								*get_macho_header_flags(const uint32_t flags);
-const char								*get_macho_filetype(const uint32_t type);
+const char								*get_macho_header_flags(
+		const uint32_t flags);
+const char								*get_macho_filetype(
+		const uint32_t type);
 
-extern void								swap_sc(struct segment_command *const sc);
-extern void								swap_sc64(struct segment_command_64 *const sc);
-extern void								swap_section32(struct section *const sec);
-extern void								swap_section64(struct section_64 *const sec);
+extern void								swap_sc(
+		struct segment_command *const sc);
+extern void								swap_sc64(
+		struct segment_command_64 *const sc);
+extern void								swap_section32(
+		struct section *const sec);
+extern void								swap_section64(
+		struct section_64 *const sec);
 
 #endif

@@ -6,31 +6,30 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/16 12:45:25 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 13:45:14 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_dumper.h"
 
-static const struct s_argument	g_arguments[256] =
+static void					process(struct s_macho_binary *const bin)
 {
-	['p'] = {"private-header", 1, 0, NULL},
-	['h'] = {"headers", 2, 0, NULL}
-};
+	int						index;
+	struct s_macho			*macho;
+	struct s_loadcommand	*lc;
+	struct symtab_command	*sc;
 
-#include <stdio.h>
-
-static void					loop_machos(struct s_macho_binary *const bin)
-{
-	int						i;
-	struct s_macho			*ptr;
-
-	i = 0;
-	while (i < bin->count)
+	index = 0;
+	while (index < bin->count)
 	{
-		ptr = bin->macho + i++;
-		printf("cpu_type: %s, magic: %s\n", get_cputype(ptr->header->cputype), get_magic(ptr->header->magic));
-		printf("type: %s, flags: %s\n", get_macho_filetype(ptr->header->filetype), get_macho_header_flags(ptr->header->flags));
+		macho = bin->macho + index++;
+		if ((lc = get_macho_first_loadcommand(macho, LC_SYMTAB)))
+		{
+			sc = get_lc_symtab(macho, lc->content);
+			ft_printf("%u %u %u %u\n", sc->symoff, sc->nsyms, sc->stroff, sc->strsize);
+		}
+		else
+			ft_fprintf(STDERR_FILENO, "no symtab found\n");
 	}
 }
 
@@ -41,18 +40,13 @@ int							main(int argc, char **argv)
 	struct s_macho_binary	*bin;
 
 	flags = 0;
-	if (!(argv = arguments_get(++argv, g_arguments, &flags, &error)))
-		write(STDERR_FILENO, error, ft_strlen(error));
-	else
+	if (*++argv)
 	{
-		if (flags & 1 && *argv)
-		{
-			bin = get_macho_binary(*argv);
-			if (bin->error)
-				write(STDERR_FILENO, bin->error, ft_strlen(bin->error));
-			else
-				loop_machos(bin);
-		}
+		bin = get_macho_binary(*argv);
+		if (bin->error)
+			write(STDERR_FILENO, bin->error, ft_strlen(bin->error));
+		else
+			process(bin);
 	}
 	return (0);
 }

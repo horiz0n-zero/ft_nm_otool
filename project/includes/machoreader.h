@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/18 11:22:49 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 13:58:23 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,25 +88,59 @@ struct											s_loadcommand
 	struct s_segment							*segment;
 };
 
-struct s_macho_binary							*get_macho_binary(const char *file);
-void											unget_macho_binary(struct s_macho_binary *const binary);
+struct s_macho_binary							*get_macho_binary(
+		const char *file);
+void											unget_macho_binary(
+		struct s_macho_binary *const binary);
 
-int												read_fat_header(struct s_macho_binary *const binary, struct fat_header *const header);
-void											read_macho_header(struct s_macho_binary *const binary, struct s_macho *const macho);
-void											read_macho_segment_sections(struct s_macho_binary *const binary, struct s_macho *const macho, struct s_loadcommand *const loadc);
-void											read_static_lib(struct s_macho_binary *const binary, struct s_macho *const macho);
-int												got_statics(struct s_staticlib_macho *statics, const uint32_t ran_off);
-void											*add_statics(struct s_macho_binary *const binary, struct s_macho *const macho, struct s_staticlib_macho *statics);
-int												get_macho_index(struct s_macho_binary *const binary, struct s_macho *const macho);
-size_t											get_fat_arch_offset(struct s_macho_binary *const binary, int offindex);
+int												read_fat_header(
+		struct s_macho_binary *const binary,
+		struct fat_header *const header);
+void											read_macho_header(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho);
+void											read_macho_segment_sections(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho,
+		struct s_loadcommand *const loadc);
+void											read_static_lib(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho);
+int												got_statics(
+		struct s_staticlib_macho *statics,
+		const uint32_t ran_off);
+void											*add_statics(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho,
+		struct s_staticlib_macho *statics);
+int												get_macho_index(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho);
+size_t											get_fat_arch_offset(
+		struct s_macho_binary *const binary,
+		int offindex);
 
-extern void										*get_object(struct s_macho_binary *const binary, void *const seek, const size_t size);
-extern void										set_object(struct s_macho_binary *const binary, const size_t size);
-extern void										*getset_object(struct s_macho_binary *const binary, void **const seek, const size_t size);
+extern void										*get_object(
+		struct s_macho_binary *const binary,
+		void *const seek,
+		const size_t size);
+extern void										set_object(
+		struct s_macho_binary *const binary,
+		const size_t size);
+extern void										*getset_object(
+		struct s_macho_binary *const binary,
+		void **const seek,
+		const size_t size);
 
-extern void										*align_object(struct s_macho_binary *const binary, const size_t alignment);
-extern void										*offset_object(struct s_macho_binary *const binary, const size_t size);
-extern void										*setoffset_object(struct s_macho_binary *const binary, const size_t size);
+extern void										*align_object(
+		struct s_macho_binary *const binary,
+		const size_t alignment);
+extern void										*offset_object(
+		struct s_macho_binary *const binary,
+		const size_t size);
+extern void										*setoffset_object(
+		struct s_macho_binary *const binary,
+		const size_t size);
 
 # define GETO(binary, seek, type) get_object(binary, seek, sizeof(type))
 # define GETSETO(binary, seek, type) getset_object(binary, seek, sizeof(type))
@@ -120,9 +154,21 @@ extern void										*setoffset_object(struct s_macho_binary *const binary, cons
 # define MSWAP64(ptr, type) mem_swap64(ptr, sizeof(type) / sizeof(uint64_t))
 # define MSWAP32(ptr, type) mem_swap32(ptr, sizeof(type) / sizeof(uint32_t))
 
+extern struct s_loadcommand						*get_macho_first_loadcommand(
+		struct s_macho *const macho,
+		const uint32_t cmdtype);
 
 // exception
-void											set_error(struct s_macho_binary *const binary, const char *const error);
-void											*set_error_nil(struct s_macho_binary *const binary, const char *const error);
+void											set_error(
+		struct s_macho_binary *const binary,
+		const char *const error);
+void											*set_error_nil(
+		struct s_macho_binary *const binary,
+		const char *const error);
+
+
+extern struct symtab_command			*get_lc_symtab(
+		struct s_macho *const macho,
+		struct symtab_command *const in) __attribute__((always_inline));
 
 #endif
