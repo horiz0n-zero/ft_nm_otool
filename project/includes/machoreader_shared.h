@@ -6,12 +6,14 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/14 15:02:56 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 11:23:08 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MACHOREADER_SHARED_H
 # define MACHOREADER_SHARED_H
+
+# include "libprintf.h"
 
 # include <unistd.h> // close - write
 # include <stdlib.h> // malloc - free

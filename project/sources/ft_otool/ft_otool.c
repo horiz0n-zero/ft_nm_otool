@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/17 11:14:55 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 11:24:57 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void							print_macho(struct s_macho_binary *const bin, struct s_macho *const m
 	struct s_loadcommand		*lc;
 	int							lcindex;
 
-	printf("macho : is32(%d), isSwap(%d) %s %s [%s(%s)]\n", machos->is32, machos->isswap,
+	ft_printf("macho : is32(%d), isSwap(%d) %s %s [%s(%s)]\n", machos->is32, machos->isswap,
 		get_macho_filetype(machos->header->filetype), get_macho_header_flags(machos->header->flags),
 		get_cputype(machos->header->cputype), get_cpusubtype(machos->header->cputype, machos->header->cpusubtype));
 	lc = machos->loadcommands;
@@ -31,7 +31,7 @@ void							print_macho(struct s_macho_binary *const bin, struct s_macho *const m
 			printf("%#08lx %-4zd %s\n", (long)lc->content - (long)bin->content, lc->size, lc->type);
 			if (lc->segment)
 			{
-				printf("-> %s\n", lc->segment->name);
+				ft_printf("-> %s\n", lc->segment->name);
 			}
 			lcindex++;
 			lc++;
@@ -49,11 +49,11 @@ void							ft_loop_machos(struct s_macho_binary *const bin, struct s_macho *mach
 	{
 		if (machos->statics)
 		{
-			printf("macho statics : count(%d)\n", machos->statics_count);
+			ft_printf("macho statics : count(%d)\n", machos->statics_count);
 			statics = machos->statics;
 			while (statics)
 			{
-				printf("(%s)", statics->name);
+				ft_printf("(%s)", statics->name);
 				print_macho(bin, statics->macho);
 				statics = statics->next;
 			}
@@ -75,7 +75,7 @@ int								main(int argc, char **argv)
 	{
 		if (bin->count > 1)
 		{
-			printf("file is fat : is32(%d), isSwap(%d)\n", bin->is32, bin->isswap);
+			ft_printf("file is fat : is32(%d), isSwap(%d)\n", bin->is32, bin->isswap);
 		}
 		ft_loop_machos(bin, bin->macho, bin->count);
 	}
