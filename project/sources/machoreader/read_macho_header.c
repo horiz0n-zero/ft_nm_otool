@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:21:01 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/16 15:41:57 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 11:07:03 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,22 @@ static void							macho_read_segment(
 
 	if (type == LC_SEGMENT_64 || type == LC_SEGMENT)
 	{
-		loadc->segments = ft_memalloc(sizeof(struct s_segment));
+		loadc->segment = ft_memalloc(sizeof(struct s_segment));
 		if (macho->is32)
 		{
-			loadc->segments->name = ((struct segment_command*)loadc->content)->segname;
+			loadc->segment->name = ((struct segment_command*)loadc->content)->segname;
 			if (macho->isswap)
 				swap_sc(loadc->content);
-			loadc->segments->count = (int)((struct segment_command*)loadc->content)->nsects;
+			loadc->segment->count = (int)((struct segment_command*)loadc->content)->nsects;
 		}
 		else
 		{
-			loadc->segments->name = ((struct segment_command_64*)loadc->content)->segname;
+			loadc->segment->name = ((struct segment_command_64*)loadc->content)->segname;
 			if (macho->isswap)
 				swap_sc64(loadc->content);
-			loadc->segments->count = (int)((struct segment_command_64*)loadc->content)->nsects;
+			loadc->segment->count = (int)((struct segment_command_64*)loadc->content)->nsects;
 		}
-		if (loadc->segments->count)
+		if (loadc->segment->count)
 			read_macho_segment_sections(binary, macho, loadc);
 		binary->position = position;
 	}
@@ -64,6 +64,7 @@ static void							macho_read_lc(struct s_macho_binary *const binary,
 		if (!(loadc->content = GETSET(binary, &binary->position, lc->cmdsize)))
 			return (set_error(binary, "bad load command content"));
 		loadc->size = (size_t)lc->cmdsize;
+		loadc->cmdtype = lc->cmd;
 		macho_read_segment(binary, macho, loadc, lc->cmd);
 		if (binary->error)
 			return ;
@@ -74,8 +75,6 @@ static inline void					try_read_macho_static_library(
 		struct s_macho_binary *const binary,
 		struct s_macho *const macho)
 {
-	static const uint64_t			magic = 0xA3E686372613C21;
-
 	if (!ft_strncmp(binary->position, ARMAG, SARMAG))
 	{
 		SETO(binary, SARMAG);

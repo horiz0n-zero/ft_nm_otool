@@ -6,11 +6,55 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 15:38:10 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/16 17:38:48 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:08:55 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
+
+static inline void			segment_section_32(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho,
+		struct s_loadcommand *const loadc,
+		struct s_section *const section)
+{
+	struct section			*sc;
+
+	sc = binary->position;
+	set_object(binary, sizeof(struct section));
+	if (macho->isswap)
+	{
+		swap_section32(sc);
+	}
+	section->sectname = sc->sectname;
+	section->segname = sc->segname;
+	section->content = (((char*)macho->header) + sc->offset);
+	section->content_size = (size_t)sc->size;
+	if (!get_object(binary, macho->header, (size_t)sc->offset + section->content_size))
+		return (set_error(binary, "bad section offset"));
+}
+
+static inline void			segment_section_64(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho,
+		struct s_loadcommand *const loadc,
+		struct s_section *const section)
+{
+	struct section_64		*sc;
+
+	sc = binary->position;
+	set_object(binary, sizeof(struct section_64));
+	if (macho->isswap)
+	{
+		swap_section64(sc);
+	}
+	section->sectname = sc->sectname;
+	section->segname = sc->segname;
+	section->content = (((char*)macho->header) + sc->offset);
+	section->content_size = (size_t)sc->size;
+	if (!get_object(binary, macho->header, (size_t)sc->offset + section->content_size))
+		return (set_error(binary, "bad section offset"));
+}
 
 void						read_macho_segment_sections(
 		struct s_macho_binary *const binary,
@@ -18,50 +62,28 @@ void						read_macho_segment_sections(
 		struct s_loadcommand *const loadc)
 {
 	int						index;
-	struct section			*seg;
-	struct section_64		*seg64;
 
 	index = 0;
 	if (macho->is32)
 		binary->position = (((char*)loadc->content) + sizeof(struct segment_command));
 	else
 		binary->position = (((char*)loadc->content) + sizeof(struct segment_command_64));
-	while (index < loadc->segments->count)
+	loadc->segment->sections = ft_memalloc(sizeof(struct s_section) * loadc->segment->count);
+	while (index < loadc->segment->count)
 	{
 		if (macho->is32)
 		{
-			seg = binary->position;
-			if (macho->isswap)
-				swap_section32(seg);
-			set_object(binary, sizeof(struct section));
-			printf("%s, %s :: %u %u\n", seg->sectname, seg->segname, seg->offset, seg->size);
+			segment_section_32(binary, macho, loadc, loadc->segment->sections + index);
 		}
 		else
 		{
-			seg64 = binary->position;
-			if (macho->isswap)
-				swap_section64(seg64);
-			set_object(binary, sizeof(struct section_64));
-			printf("%s, %s :: %u %u\n", seg64->sectname, seg64->segname, seg64->offset, seg64->size);
+			segment_section_64(binary, macho, loadc, loadc->segment->sections + index);
 		}
+		if (binary->error)
+			return ;
 		++index;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

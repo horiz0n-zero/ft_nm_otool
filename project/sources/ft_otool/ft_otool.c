@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 14:20:14 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/17 11:14:55 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void							print_macho(struct s_macho_binary *const bin, struct s_macho *const m
 		while (lcindex < machos->loadcommands_count)
 		{
 			printf("%#08lx %-4zd %s\n", (long)lc->content - (long)bin->content, lc->size, lc->type);
-			if (lc->segments)
+			if (lc->segment)
 			{
-				printf("-> %s\n", lc->segments->name);
+				printf("-> %s\n", lc->segment->name);
 			}
 			lcindex++;
 			lc++;

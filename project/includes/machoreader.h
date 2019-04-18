@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/16 15:39:56 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/18 11:07:17 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,33 @@ struct											s_staticlib_macho
 	struct s_macho								*macho;
 	struct s_staticlib_macho					*next;
 };
+struct											s_section
+{
+	char										*sectname;
+	char										*segname;
+
+	void										*content;
+	size_t										content_size;
+};
 struct											s_segment
 {
 	char										*name;
+
 	int											count;
 	int											pad;
-	void										*sections;
+	struct s_section							*sections;
 };
 struct											s_loadcommand
 {
 	const char									*type;
+	uint32_t									cmdtype;
+	uint32_t									pad; // pad
+
 	void										*content;
 	size_t										size;
-	struct s_segment							*segments;
-};
 
+	struct s_segment							*segment;
+};
 
 struct s_macho_binary							*get_macho_binary(const char *file);
 void											unget_macho_binary(struct s_macho_binary *const binary);
@@ -107,6 +119,7 @@ extern void										*setoffset_object(struct s_macho_binary *const binary, cons
 # define AS(ptr, type) ((type*)ptr)
 # define MSWAP64(ptr, type) mem_swap64(ptr, sizeof(type) / sizeof(uint64_t))
 # define MSWAP32(ptr, type) mem_swap32(ptr, sizeof(type) / sizeof(uint32_t))
+
 
 // exception
 void											set_error(struct s_macho_binary *const binary, const char *const error);
