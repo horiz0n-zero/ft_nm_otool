@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:21:01 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/18 11:07:03 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/19 14:25:23 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@ static void							macho_read_lc(struct s_macho_binary *const binary,
 		if (binary->error)
 			return ;
 	}
+	set_macho_sections(binary, macho);
+	read_macho_symtab(binary, macho);
+	read_macho_dysymtab(binary, macho);
 }
 
 static inline void					try_read_macho_static_library(

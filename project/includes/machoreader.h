@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/18 13:58:23 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/19 14:43:56 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,12 @@
 # include "machoreader_reflections.h"
 
 typedef struct s_macho_binary					t_macho_binary;
+
 typedef struct s_macho							t_macho;
 typedef struct s_staticlib_macho				t_staticlib_macho;
+
+typedef struct s_symbol							t_symbol;
+typedef struct s_section						t_section;
 typedef struct s_segment						t_segment;
 typedef struct s_loadcommand					t_loadcommand;
 
@@ -50,6 +54,13 @@ struct											s_macho
 	struct mach_header							*header;
 	struct s_loadcommand						*loadcommands;
 	int											loadcommands_count;
+
+	struct s_section							**sections;
+	int											sections_count;
+
+	struct s_symbol								*symbols;
+	int											symbols_count;
+
 	int											statics_count;
 	struct s_staticlib_macho					*statics;
 };
@@ -59,6 +70,12 @@ struct											s_staticlib_macho
 	struct ranlib								*ran;
 	struct s_macho								*macho;
 	struct s_staticlib_macho					*next;
+};
+
+struct											s_symbol
+{
+	struct s_section							*section;
+	char										*name;
 };
 struct											s_section
 {
@@ -103,6 +120,15 @@ void											read_macho_segment_sections(
 		struct s_macho_binary *const binary,
 		struct s_macho *const macho,
 		struct s_loadcommand *const loadc);
+void											set_macho_sections(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho);
+void											read_macho_symtab(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho);
+void											read_macho_dysymtab(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho);
 void											read_static_lib(
 		struct s_macho_binary *const binary,
 		struct s_macho *const macho);
@@ -165,10 +191,5 @@ void											set_error(
 void											*set_error_nil(
 		struct s_macho_binary *const binary,
 		const char *const error);
-
-
-extern struct symtab_command			*get_lc_symtab(
-		struct s_macho *const macho,
-		struct symtab_command *const in) __attribute__((always_inline));
 
 #endif

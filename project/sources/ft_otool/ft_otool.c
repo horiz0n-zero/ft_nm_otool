@@ -6,13 +6,14 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/18 13:14:37 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/19 14:42:28 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
 #include <stdio.h>
+
 
 void							print_macho(struct s_macho_binary *const bin, struct s_macho *const machos)
 { // pure macho

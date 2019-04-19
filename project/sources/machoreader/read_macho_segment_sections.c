@@ -6,11 +6,36 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 15:38:10 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/17 13:08:55 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/19 14:53:08 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
+
+void						set_macho_sections(
+		struct s_macho_binary *const binary,
+		struct s_macho *const macho)
+{
+	int						index;
+	int						i;
+	struct s_loadcommand	*lc;
+	struct s_section		**ptr;
+
+	if (!(macho->sections = ft_memalloc(sizeof(void*) * macho->sections_count)))
+		return (set_error(binary, "malloc"));
+	ptr = macho->sections;
+	index = 0;
+	while (index < macho->loadcommands_count)
+	{
+		lc = macho->loadcommands + index++;
+		if (lc->segment)
+		{
+			i = 0;
+			while (i < lc->segment->count)
+				*ptr++ = lc->segment->sections + i++;
+		}
+	}
+}
 
 static inline void			segment_section_32(
 		struct s_macho_binary *const binary,
@@ -83,7 +108,5 @@ void						read_macho_segment_sections(
 			return ;
 		++index;
 	}
+	macho->sections_count += loadc->segment->count;
 }
-
-
-
