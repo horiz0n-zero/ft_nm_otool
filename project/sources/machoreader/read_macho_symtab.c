@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 09:40:56 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/19 15:06:19 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 14:31:35 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@ static inline void			fill_symbol32(
 		struct nlist *const list,
 		struct s_symbol *const symbol)
 {
+	if (macho->isswap)
+	{
+		list->n_un.n_strx = __builtin_bswap32(list->n_un.n_strx);
+		// list->n_type = __builtin_bswap8(list->n_type);
+		// list->n_sect = __builtin_bswap8(list->n_sect);
+		list->n_desc = __builtin_bswap16(list->n_desc);
+		list->n_value = __builtin_bswap32(list->n_value);
+	}
 	if (list->n_sect != NO_SECT)
 	{
 		if (!macho->sections || (int)list->n_sect > macho->sections_count)
@@ -57,6 +65,12 @@ static inline void			fill_symbol64(
 		struct nlist_64 *const list,
 		struct s_symbol *const symbol)
 {
+	if (macho->isswap)
+	{
+		list->n_un.n_strx = __builtin_bswap32(list->n_un.n_strx);
+		list->n_desc = __builtin_bswap16(list->n_desc);
+		list->n_value = __builtin_bswap64(list->n_value);
+	}
 	if (list->n_sect != NO_SECT) // -1
 	{
 		if (!macho->sections || (int)list->n_sect > macho->sections_count)

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 13:54:05 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/12 12:51:37 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 14:19:07 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ inline void						*getset_object(struct s_macho_binary *const binary, void **cons
 	register void *const		current_seek = *seek;
 	register char *const		offset_str = ((char*)current_seek) + size;
 
-	if (offset_str < end_str)
+	if (offset_str <= end_str)
 	{
 		*seek = offset_str;
 		return (current_seek);
@@ -33,7 +33,7 @@ inline void						*get_object(struct s_macho_binary *const binary, void *const se
 	register void *const		current_seek = seek;
 	register char *const		offset_str = ((char*)current_seek) + size;
 
-	if (offset_str < end_str)
+	if (offset_str <= end_str)
 		return (current_seek);
 	else
 		return (NULL);
