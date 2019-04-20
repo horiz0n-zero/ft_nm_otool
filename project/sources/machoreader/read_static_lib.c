@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 15:31:55 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 14:14:19 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 17:50:39 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ static void						read_static_lib_object(
 	binary->position = (((char*)binary->position) + len);
 	while (!*(char*)binary->position)
 		binary->position = (((char*)binary->position) + 1);
-	printf("ran_off:(%u) max:(%d) %s\n", ran_off, macho->statics_count, staticmacho->name);
-	fflush(stdout);
 	staticmacho->macho = ft_memalloc(sizeof(struct s_macho));
 	read_macho_header(binary, staticmacho->macho);
 }

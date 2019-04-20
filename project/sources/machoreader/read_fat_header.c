@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:22:35 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 12:52:45 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 17:49:54 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,11 @@ static void						loop_fat_header32(struct s_macho_binary *const binary,
 	binary->macho = ft_memalloc(sizeof(struct s_macho) * (size_t)count);
 	current = binary->macho;
 	arch_position = binary->position;
-	printf("loop_(%d)\n", binary->count);
 	while (count--)
 	{
 		if (!(arch = GETSETO(binary, &arch_position, struct fat_arch)))
 			return (set_error(binary, "arch size <"));
 		MSWAP32(arch, struct fat_arch); // illogic align || align == offset
-		printf("offset(%zd), size(%zd), align(%zd)\n", arch->offset, arch->size, arch->align);
 		setoffset_object(binary, (size_t)arch->offset);
 		read_macho_header(binary, current++);
 		if (binary->error)

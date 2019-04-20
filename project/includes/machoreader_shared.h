@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 13:04:39 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 17:51:41 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,6 @@ char								**arguments_get(char **argv,
 		char **const error);
 
 # define W(str) write(STDOUT_FILENO, str, sizeof(str))
+
 
 #endif

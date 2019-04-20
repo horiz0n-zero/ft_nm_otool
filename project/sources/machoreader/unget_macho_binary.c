@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 14:23:22 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/18 10:57:52 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 16:55:12 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,12 @@ static void					unget_macho(struct s_macho *const macho)
 			}
 			ptr++;
 		}
-		free(macho->loadcommands);
+		if (macho->sections)
+			free(macho->sections);
+		if (macho->symbols)
+			free(macho->symbols);
+		if (macho->loadcommands)
+			free(macho->loadcommands);
 	}
 }
 

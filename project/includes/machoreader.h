@@ -6,14 +6,12 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/19 14:43:56 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 17:51:24 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MACHOREADER_H
 # define MACHOREADER_H
-
-# include <stdio.h>
 
 # include "machoreader_shared.h"
 # include "machoreader_reflections.h"
@@ -183,6 +181,10 @@ extern void										*setoffset_object(
 extern struct s_loadcommand						*get_macho_first_loadcommand(
 		struct s_macho *const macho,
 		const uint32_t cmdtype);
+struct s_section								*get_macho_section(
+		struct s_macho *const macho,
+		const char *const segname,
+		const char *const sectname);
 
 // exception
 void											set_error(

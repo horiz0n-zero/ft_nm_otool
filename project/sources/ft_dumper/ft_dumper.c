@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/19 14:56:31 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/20 17:52:07 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ static void					print_symtab(struct s_macho *const macho)
 	{
 		if (macho->symbols[index].section)
 		{
-			printf("(%s, %s) %s\n", macho->symbols[index].section->sectname,
+			ft_printf("(%s, %s) %s\n", macho->symbols[index].section->sectname,
 					macho->symbols[index].section->segname, macho->symbols[index].name);
 		}
 		else
 		{
-			printf("external %s\n", macho->symbols[index].name);
+			ft_printf("external %s\n", macho->symbols[index].name);
 		}
 		index++;
 	}
@@ -36,7 +36,7 @@ static void					read_statics(struct s_staticlib_macho *m)
 {
 	while (m)
 	{
-		printf("%s:\n", m->name);
+		ft_printf("%s:\n", m->name);
 		print_symtab(m->macho);
 		m = m->next;
 	}
