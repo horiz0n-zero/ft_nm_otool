@@ -1,19 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_process_error.c                                 :+:      :+:    :+:   */
+/*   nm_print_j.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/20 16:12:08 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 14:36:57 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/21 13:59:57 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/22 13:56:44 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_nm.h"
+#include "machoreader.h"
 
-void				nm_process_error(struct s_macho_binary *const bin)
+void				nm_pr_symbols_j(
+		struct s_macho *const macho,
+		struct s_symbol *const symbol,
+		int count)
 {
-	ft_fprintf(STDERR_FILENO, "ft_nm: %s: %s.\n\n", bin->file, bin->error);
-	unget_macho_binary(bin);
+	int				index;
+
+	index = -1;
+	while (++index < count)
+	{
+		if (!(symbol + index)->section ||
+			(symbol + index)->type & N_STAB ||
+			!*(symbol + index)->name)
+			continue ;
+		ft_printf("%s\n", (symbol + index)->name);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:07:39 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 17:54:25 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 09:55:49 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void								cstrings_multi_macho(
 		while (ptr < end_ptr)
 		{
 			if (macho->is32)
-				ft_printf("%08llx %4zd \"%s\"", ptr, ft_strlen(ptr), ptr);
+				ft_printf("%08llx %4zd \"%s\"", (ptrdiff_t)ptr - (ptrdiff_t)macho->header, ft_strlen(ptr), ptr);
 			else
-				ft_printf("%016llx %4zd \"%s\"\n", ptr, ft_strlen(ptr), ptr);
+				ft_printf("%016llx %4zd \"%s\"\n", (ptrdiff_t)ptr - (ptrdiff_t)macho->header, ft_strlen(ptr), ptr);
 			while (*ptr && ptr < end_ptr)
 				ptr++;
 			while (!*ptr && ptr < end_ptr)

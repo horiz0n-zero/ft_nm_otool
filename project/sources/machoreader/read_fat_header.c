@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:22:35 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 17:49:54 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/21 12:37:47 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void						loop_fat_header32(struct s_macho_binary *const binary,
 	while (count--)
 	{
 		if (!(arch = GETSETO(binary, &arch_position, struct fat_arch)))
-			return (set_error(binary, "arch size <"));
+			return (set_error(binary, MRERR_MACHO));
 		MSWAP32(arch, struct fat_arch); // illogic align || align == offset
 		setoffset_object(binary, (size_t)arch->offset);
 		read_macho_header(binary, current++);

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:21:01 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/19 14:25:23 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 16:16:54 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ static void							macho_read_segment(
 			read_macho_segment_sections(binary, macho, loadc);
 		binary->position = position;
 	}
+	if (type == LC_LOAD_DYLIB || type == LC_LOAD_WEAK_DYLIB || type == LC_ID_DYLIB || type == LC_REEXPORT_DYLIB)
+		get_macho_dylib(binary, macho, loadc);
 }
 
 static void							macho_read_lc(struct s_macho_binary *const binary,
@@ -55,14 +57,14 @@ static void							macho_read_lc(struct s_macho_binary *const binary,
 	while (index < macho->loadcommands_count)
 	{
 		if (!(lc = GETO(binary, binary->position, struct load_command)))
-			return (set_error(binary, "< load_command"));
+			return (set_error(binary, MRERR_MACHO));
 		loadc = macho->loadcommands + index++;
 		if (macho->isswap)
 			macho->is32 ? MSWAP32(lc, struct load_command) : MSWAP64(lc, struct load_command);
 		if (!(loadc->type = get_lc(lc->cmd)))
-			return (set_error(binary, "bad load command"));
+			return (set_error(binary, MRERR_MACHO));
 		if (!(loadc->content = GETSET(binary, &binary->position, lc->cmdsize)))
-			return (set_error(binary, "bad load command content"));
+			return (set_error(binary, MRERR_MACHO));
 		loadc->size = (size_t)lc->cmdsize;
 		loadc->cmdtype = lc->cmd;
 		macho_read_segment(binary, macho, loadc, lc->cmd);
@@ -71,7 +73,6 @@ static void							macho_read_lc(struct s_macho_binary *const binary,
 	}
 	set_macho_sections(binary, macho);
 	read_macho_symtab(binary, macho);
-	read_macho_dysymtab(binary, macho);
 }
 
 static inline void					try_read_macho_static_library(
@@ -84,7 +85,7 @@ static inline void					try_read_macho_static_library(
 		read_static_lib(binary, macho);
 	}
 	else
-		binary->error = "bad macho";
+		binary->error = MRERR_MACHO;
 }
 
 void								read_macho_header(
@@ -93,7 +94,7 @@ void								read_macho_header(
 {
 	macho->header = GETO(binary, binary->position, struct mach_header);
 	if (!macho->header)
-		return (set_error(binary, "size macho <"));
+		return (set_error(binary, MRERR_MACHO));
 	if (macho->header->magic == MH_MAGIC ||
 			macho->header->magic == MH_CIGAM)
 	{

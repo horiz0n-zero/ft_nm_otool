@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 17:52:07 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 16:23:36 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void					print_symtab(struct s_macho *const macho)
 {
 	int						index;
+	struct s_dylib			*ptr;
 
 	index = 0;
 	while (index < macho->symbols_count)
@@ -28,6 +29,14 @@ static void					print_symtab(struct s_macho *const macho)
 		{
 			ft_printf("external %s\n", macho->symbols[index].name);
 		}
+		index++;
+	}
+	index = 0;
+	ptr = macho->dylibs;
+	while (index < macho->dylibs_count)
+	{
+		ft_printf("%s(%s)\n", ptr->path, ptr->name);
+		ptr = ptr->next;
 		index++;
 	}
 }

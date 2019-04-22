@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/18 13:52:12 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 14:45:44 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # include <mach-o/stab.h>
 # include <mach-o/swap.h>
 # include <ar.h>
+
+typedef struct s_symbol					t_symbol;
+typedef struct s_macho					t_macho;
 
 struct									s_cputype_reflection
 {
@@ -75,6 +78,14 @@ const char								*get_macho_header_flags(
 const char								*get_macho_filetype(
 		const uint32_t type);
 
+
+const char								*get_nlist_ext(
+		struct s_symbol *const symbol);
+const char								*get_nlist_library(
+		struct s_macho *const macho,
+		struct s_symbol *const symbol);
+
+// swap
 extern void								swap_sc(
 		struct segment_command *const sc);
 extern void								swap_sc64(

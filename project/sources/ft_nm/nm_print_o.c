@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_process_error.c                                 :+:      :+:    :+:   */
+/*   nm_print_o.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/20 16:12:08 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 14:36:57 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/22 09:47:07 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/22 09:54:39 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-void				nm_process_error(struct s_macho_binary *const bin)
+void				nm_pr_symbols_o(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count)
 {
-	ft_fprintf(STDERR_FILENO, "ft_nm: %s: %s.\n\n", bin->file, bin->error);
-	unget_macho_binary(bin);
+
+}
+
+void				nm_pr_symbols_o32(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count)
+{
+
 }

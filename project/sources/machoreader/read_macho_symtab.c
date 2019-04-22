@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/19 09:40:56 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 14:31:35 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 16:07:20 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,18 @@ static inline void			fill_symbol32(
 	if (macho->isswap)
 	{
 		list->n_un.n_strx = __builtin_bswap32(list->n_un.n_strx);
-		// list->n_type = __builtin_bswap8(list->n_type);
-		// list->n_sect = __builtin_bswap8(list->n_sect);
 		list->n_desc = __builtin_bswap16(list->n_desc);
 		list->n_value = __builtin_bswap32(list->n_value);
 	}
 	if (list->n_sect != NO_SECT)
 	{
 		if (!macho->sections || (int)list->n_sect > macho->sections_count)
-			return (set_error(binary, "n_sect to to bad for sure!"));
+			return (set_error(binary, MRERR_MACHO));
 		symbol->section = macho->sections[(int)list->n_sect - 1];
 	}
+	symbol->type = list->n_type;
+	symbol->desc = list->n_desc;
+	symbol->value = (uint64_t)list->n_value;
 }
 
 static void					symtab_loop32(
@@ -44,10 +45,11 @@ static void					symtab_loop32(
 	char *const				strtab = (((char*)macho->header) + symtab->stroff);
 
 	if (!get_object(binary, macho->header, (size_t)symtab->symoff + symtab->nsyms * sizeof(struct nlist)))
-		return (set_error(binary, "insuff symtab size32"));
+		return (set_error(binary, MRERR_MACHO));
 	if (!get_object(binary, macho->header, (size_t)symtab->stroff + symtab->strsize))
-		return (set_error(binary, "insuff symtab str size32"));
-	macho->symbols = ft_memalloc(sizeof(struct s_symbol) * (size_t)symtab->nsyms);
+		return (set_error(binary, MRERR_MACHO));
+	if (!(macho->symbols = ft_memalloc(sizeof(struct s_symbol) * (size_t)symtab->nsyms)))
+		return (set_error(binary, MRERR_MEM));
 	macho->symbols_count = (int)symtab->nsyms;
 	list = (void*)(((char*)macho->header) + symtab->symoff);
 	index = 0;
@@ -71,12 +73,15 @@ static inline void			fill_symbol64(
 		list->n_desc = __builtin_bswap16(list->n_desc);
 		list->n_value = __builtin_bswap64(list->n_value);
 	}
-	if (list->n_sect != NO_SECT) // -1
+	if (list->n_sect != NO_SECT)
 	{
 		if (!macho->sections || (int)list->n_sect > macho->sections_count)
-			return (set_error(binary, "n_sect to to bad for sure !"));
+			return (set_error(binary, MRERR_MACHO));
 		symbol->section = macho->sections[(int)list->n_sect - 1];
 	}
+	symbol->type = list->n_type;
+	symbol->desc = list->n_desc;
+	symbol->value = list->n_value;
 }
 
 static void					symtab_loop64(
@@ -89,10 +94,11 @@ static void					symtab_loop64(
 	char *const				strtab = (((char*)macho->header) + symtab->stroff);
 
 	if (!get_object(binary, macho->header, (size_t)symtab->symoff + symtab->nsyms * sizeof(struct nlist_64)))
-		return (set_error(binary, "insuff symtab size64"));
+		return (set_error(binary, MRERR_MACHO));
 	if (!get_object(binary, macho->header, (size_t)symtab->stroff + symtab->strsize))
-		return (set_error(binary, "insuff symtab str size64"));
-	macho->symbols = ft_memalloc(sizeof(struct s_symbol) * (size_t)symtab->nsyms);
+		return (set_error(binary, MRERR_MACHO));
+	if (!(macho->symbols = ft_memalloc(sizeof(struct s_symbol) * (size_t)symtab->nsyms)))
+		return (set_error(binary, MRERR_MEM));
 	macho->symbols_count = (int)symtab->nsyms;
 	list = (void*)(((char*)macho->header) + symtab->symoff);
 	index = 0;
@@ -112,9 +118,9 @@ void						read_macho_symtab(
 	struct symtab_command	*symtab;
 
 	if (!(cmd = get_macho_first_loadcommand(macho, LC_SYMTAB)))
-		return (set_error(binary, "no symtab found in mach-object"));
+		return (set_error(binary, MRERR_MACHO));
 	if (cmd->size != sizeof(struct symtab_command))
-		return (set_error(binary, "bad symtab_command size"));
+		return (set_error(binary, MRERR_MACHO));
 	symtab = cmd->content;
 	if (macho->isswap)
 	{

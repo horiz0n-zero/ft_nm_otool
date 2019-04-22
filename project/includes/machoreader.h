@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 17:51:24 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 16:47:21 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_macho_binary					t_macho_binary;
 typedef struct s_macho							t_macho;
 typedef struct s_staticlib_macho				t_staticlib_macho;
 
+typedef struct s_dylib							t_dylib;
 typedef struct s_symbol							t_symbol;
 typedef struct s_section						t_section;
 typedef struct s_segment						t_segment;
@@ -59,6 +60,9 @@ struct											s_macho
 	struct s_symbol								*symbols;
 	int											symbols_count;
 
+	struct s_dylib								*dylibs;
+	int											dylibs_count;
+
 	int											statics_count;
 	struct s_staticlib_macho					*statics;
 };
@@ -70,10 +74,23 @@ struct											s_staticlib_macho
 	struct s_staticlib_macho					*next;
 };
 
+struct											s_dylib
+{
+	struct s_loadcommand						*lc;
+	char										*path;
+	char										*name;
+	struct s_dylib								*next;
+};
 struct											s_symbol
 {
 	struct s_section							*section;
 	char										*name;
+
+	uint8_t										type;
+	uint8_t										pad0;
+	uint16_t									desc;
+	uint32_t									pad1;
+	uint64_t									value;
 };
 struct											s_section
 {
@@ -121,10 +138,14 @@ void											read_macho_segment_sections(
 void											set_macho_sections(
 		struct s_macho_binary *const binary,
 		struct s_macho *const macho);
-void											read_macho_symtab(
+void											get_macho_dylib(
 		struct s_macho_binary *const binary,
-		struct s_macho *const macho);
-void											read_macho_dysymtab(
+		struct s_macho *const macho,
+		struct s_loadcommand *const lc);
+struct s_dylib									*get_macho_dylib_index(
+		struct s_macho *const macho,
+		const int index);
+void											read_macho_symtab(
 		struct s_macho_binary *const binary,
 		struct s_macho *const macho);
 void											read_static_lib(
@@ -186,6 +207,15 @@ struct s_section								*get_macho_section(
 		const char *const segname,
 		const char *const sectname);
 
+// sort
+void											sort_symbols(
+		struct s_symbol *const symbols,
+		const int count,
+		int (*const sortfunc)(struct s_symbol *const a, struct s_symbol *const b));
+int												sort_symbols_alpha(
+		struct s_symbol *const a,
+		struct s_symbol *const b);
+
 // exception
 void											set_error(
 		struct s_macho_binary *const binary,
@@ -193,5 +223,12 @@ void											set_error(
 void											*set_error_nil(
 		struct s_macho_binary *const binary,
 		const char *const error);
+
+# define MRERR_MACHO "The file was not recognized as a valid object file"
+# define MRERR_DENIED "Permission denied"
+# define MRERR_NOTFOUND "No such file or directory"
+# define MRERR_ISDIR "Is a directory"
+# define MRERR_NOTREF "Is a named type file"
+# define MRERR_MEM "Not enough space/cannot allocate memory"
 
 #endif

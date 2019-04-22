@@ -1,14 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_sort.c                                       :+:      :+:    :+:   */
+/*   str_push.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/20 12:44:34 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 15:06:55 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/22 14:46:27 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/22 14:47:03 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "machoreader.h"
+#include "machoreader_shared.h"
 
+char				*str_push(const char *src, char *ptr)
+{
+	while (*src)
+		*ptr++ = *src++;
+	return (ptr);
+}

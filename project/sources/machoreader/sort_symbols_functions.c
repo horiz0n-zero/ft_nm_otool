@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nm_process_error.c                                 :+:      :+:    :+:   */
+/*   sort_symbols_functions.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/20 16:12:08 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 14:36:57 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/04/21 13:55:16 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/04/21 16:09:50 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_nm.h"
+#include "machoreader.h"
 
-void				nm_process_error(struct s_macho_binary *const bin)
+int							sort_symbols_alpha(
+		struct s_symbol *const a,
+		struct s_symbol *const b)
 {
-	ft_fprintf(STDERR_FILENO, "ft_nm: %s: %s.\n\n", bin->file, bin->error);
-	unget_macho_binary(bin);
+	register const char		*sa;
+	register const char		*sb;
+
+	sa = a->name;
+	sb = b->name;
+	while (*sa && *sb && *sa == *sb)
+	{
+		++sa;
+		++sb;
+	}
+	return ((int)*sa - *sb);
 }

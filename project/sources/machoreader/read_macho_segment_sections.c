@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 15:38:10 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 17:50:19 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/21 12:44:16 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void						set_macho_sections(
 	struct s_section		**ptr;
 
 	if (!(macho->sections = ft_memalloc(sizeof(void*) * macho->sections_count)))
-		return (set_error(binary, "malloc"));
+		return (set_error(binary, MRERR_MEM));
 	ptr = macho->sections;
 	index = 0;
 	while (index < macho->loadcommands_count)
@@ -56,7 +56,7 @@ static inline void			segment_section_32(
 	section->content = (((char*)macho->header) + sc->offset);
 	section->content_size = (size_t)sc->size;
 	if (!get_object(binary, macho->header, (size_t)sc->offset + section->content_size))
-		return (set_error(binary, "bad section offset"));
+		return (set_error(binary, MRERR_MACHO));
 }
 
 static inline void			segment_section_64(
@@ -78,7 +78,7 @@ static inline void			segment_section_64(
 	section->content = (((char*)macho->header) + sc->offset);
 	section->content_size = (size_t)sc->size;
 	if (!get_object(binary, macho->header, (size_t)sc->offset + section->content_size))
-		return (set_error(binary, "bad section offset"));
+		return (set_error(binary, MRERR_MACHO));
 }
 
 void						read_macho_segment_sections(

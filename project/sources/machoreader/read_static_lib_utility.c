@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 09:02:24 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/15 14:00:45 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/21 12:53:22 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,15 @@ void							*add_statics(
 {
 	if (!statics)
 	{
-		macho->statics = ft_memalloc(sizeof(struct s_staticlib_macho));
+		if (!(macho->statics = ft_memalloc(sizeof(struct s_staticlib_macho))))
+			return (set_error_nil(binary, MRERR_MEM));
 		macho->statics_count = 1;
 		return (macho->statics);
 	}
 	while (statics->next)
 		statics = statics->next;
-	statics->next = ft_memalloc(sizeof(struct s_staticlib_macho));
+	if (!(statics->next = ft_memalloc(sizeof(struct s_staticlib_macho))))
+		return (set_error_nil(binary, MRERR_MEM));
 	macho->statics_count++;
 	return (statics->next);
 }
@@ -68,10 +70,3 @@ int								got_statics(
 	}
 	return (0);
 }
-
-
-
-
-
-
-

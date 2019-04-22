@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/20 17:22:23 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/22 16:47:38 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,62 @@ struct						s_nm
 # define NM_N 1 << 6
 # define NM_P 1 << 7
 # define NM_R 1 << 8
+# define NM_A 1 << 9
 	int						pad;
 	const struct s_nmprint	*print;
+	int						(*sortfunc)(
+			struct s_symbol *const a,
+			struct s_symbol *const b);
 };
 
 struct						s_nmprint
 {
-	void					(*pr_symbols)(struct s_symbol *symbols, int count);
-	void					(*pr_symbols_32)(struct s_symbol *symbols, int count);
+	void					(*pr_symbols)(
+			struct s_macho *const macho,
+			struct s_symbol *const symbols,
+			int count);
+	void					(*pr_symbols_32)(
+			struct s_macho *const macho,
+			struct s_symbol *const symbols,
+			int count);
 };
+void						nm_pr_symbols_j(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
+void						nm_pr_symbols_m(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
+void						nm_pr_symbols_m32(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
+void						nm_pr_symbols_o(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
+void						nm_pr_symbols_o32(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
+void						nm_pr_symbols(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
+void						nm_pr_symbols32(
+		struct s_macho *const macho,
+		struct s_symbol *const symbols,
+		int count);
 
 # define DEFAULT_BIN "a.out"
 
+void						nm_process_files(
+		struct s_nm *const nm,
+		char **argv);
 void						nm_process_file(
 		struct s_nm *const nm,
-		const char *const file);
+		struct s_macho_binary *const bin);
 
 void						nm_process_cstrings(
 		struct s_nm *const nm,
