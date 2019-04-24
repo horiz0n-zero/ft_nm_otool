@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 09:31:25 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:43:14 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/23 12:53:51 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ void				nm_pr_symbols_m32(
 	while (index < count)
 	{
 		ptr = symbols + index++;
-		if (!ptr->value)
+		if (ptr->skip)
 			continue ;
-		if (ptr->section)
+		if (ptr->value)
 			ft_printf("%08llx %s%s\n", ptr->value, get_nlist_ext(ptr), ptr->name);
 		else
 			ft_printf("         %s%s%s\n", get_nlist_ext(ptr),  ptr->name, get_nlist_library(macho, ptr));
@@ -45,9 +45,9 @@ void				nm_pr_symbols_m(
 	while (index < count)
 	{
 		ptr = symbols + index++;
-		if (ptr->type & N_STAB)
+		if (ptr->skip)
 			continue ;
-		if (ptr->section)
+		if (ptr->value)
 			ft_printf("%016llx %s%s\n", ptr->value, get_nlist_ext(ptr), ptr->name);
 		else
 			ft_printf("                 %s%s%s\n", get_nlist_ext(ptr),  ptr->name, get_nlist_library(macho, ptr));

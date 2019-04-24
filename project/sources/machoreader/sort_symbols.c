@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/21 13:27:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 16:16:11 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 09:45:32 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,56 +16,67 @@ static inline void		sort_symbols_swap(
 		struct s_symbol *const a,
 		struct s_symbol *const b)
 {
-	struct s_symbol	c;
+	register uint64_t	*aptr;
+	register uint64_t	*bptr;
+	int					size;
 
-	c.section = a->section;
-	c.name = a->name;
-	a->section = b->section;
-	a->name = b->name;
-	b->section = c.section;
-	b->name = c.name;
-}
-
-static int				sort_symbols_partitionner(
-		struct s_symbol *const symbols,
-		int (*const sortfunc)(struct s_symbol *const a, struct s_symbol *const b),
-		int p, int r)
-{
-	int					pivot;
-
-	pivot = p;
-	while (42)
+	size = 0;
+	aptr = (uint64_t*)a;
+	bptr = (uint64_t*)b;
+	while (size < (sizeof(struct s_symbol) / sizeof(uint64_t)))
 	{
-		while (sortfunc(symbols + r, symbols + pivot))
-			--r;
-		while (!sortfunc(symbols + p, symbols + pivot))
-			++p;
-		if (p < r)
-			sort_symbols_swap(symbols + p, symbols + r);
-		else
-			return r;
+		*aptr ^= *bptr;
+		*bptr ^= *aptr;
+		*aptr++ ^= *bptr++;
+		++size;
 	}
 }
 
-static void				sort_symbols_proc(
+static void				sort_symbols_reverse(
 		struct s_symbol *const symbols,
-		int (*const sortfunc)(struct s_symbol *const a, struct s_symbol *const b),
-		int p, int r)
+		const int count)
 {
-	int					q;
+	int					s;
+	int					e;
+	const int			middle = count / 2;
 
-	if (p < r)
+	s = 0;
+	e = count - 1;
+	while (s < middle)
 	{
-		q = sort_symbols_partitionner(symbols, sortfunc, p, r);
-		sort_symbols_proc(symbols, sortfunc, p, q);
-		sort_symbols_proc(symbols, sortfunc, q + 1, r);
+		sort_symbols_swap(symbols + s, symbols + e);
+		++s;
+		--e;
 	}
 }
 
 void					sort_symbols(
 		struct s_symbol *const symbols,
 		const int count,
+		const int reverse,
 		int (*const sortfunc)(struct s_symbol *const a, struct s_symbol *const b))
 {
-	sort_symbols_proc(symbols, sortfunc, 0, count - 1);
+	int					i;
+	int					j;
+	int					space;
+
+	if (!sortfunc)
+		return ;
+	space = count / 2;
+	i = 0;
+	j = space;
+	while (j > 0)
+	{
+		while (j < count)
+		{
+			if (sortfunc(symbols + i, symbols + j))
+				sort_symbols_swap(symbols + i, symbols + j);
+			i++;
+			j++;
+		}
+		i = 0;
+		j = --space;
+	}
+	if (reverse)
+		sort_symbols_reverse(symbols, count);
 }

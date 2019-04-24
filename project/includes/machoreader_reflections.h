@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 14:45:44 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 12:59:25 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ struct									s_cputype_reflection
 {
 	cpu_type_t							value;
 	const char							*reflection;
+	const char							*reflection_small;
 };
 
 struct									s_cpusubtype_in
@@ -51,7 +52,8 @@ struct									s_cpusubtype_reflection
 };
 
 const char								*get_cputype(
-		const cpu_type_t cputype);
+		const cpu_type_t cputype,
+		const int small);
 const char								*get_cpusubtype(
 		const cpu_type_t type,
 		const cpu_subtype_t cpusubtype);
@@ -80,6 +82,8 @@ const char								*get_macho_filetype(
 
 
 const char								*get_nlist_ext(
+		struct s_symbol *const symbol);
+char									get_nlist_extchar(
 		struct s_symbol *const symbol);
 const char								*get_nlist_library(
 		struct s_macho *const macho,

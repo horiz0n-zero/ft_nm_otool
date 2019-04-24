@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:55:52 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:48:25 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 10:45:51 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static struct s_nm						g_nm =
 
 static const struct s_argument			g_arguments[256] =
 {
-	['j'] = {"just-name", NM_J, 0, NULL},
+	['j'] = {"just-symbol-name", NM_J, 0, NULL},
 	['o'] = {"object", NM_O, 0, NULL},
 	['m'] = {"multi", NM_M, 0, NULL},
 
@@ -65,6 +65,10 @@ static inline void						nm_process_flags(void)
 		g_nm.print = g_nmprint + 1;
 	else if (g_nm.flags & NM_O)
 		g_nm.print = g_nmprint + 2;
+	if (g_nm.flags & NM_N)
+		g_nm.sortfunc = sort_symbols_numeric;
+	else if (g_nm.flags & NM_P)
+		g_nm.sortfunc = NULL;
 }
 
 int										main(int argc, char **argv)

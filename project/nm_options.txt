@@ -6,7 +6,7 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/18 12:41:07 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/22 16:44:45 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/24 13:02:57 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,10 @@
 
 -g --global					# display only global (*.dylib func & non-static)
 -u --undefined				# display only extern symbol (malloc, free ...)
+-d --debug-entry			# ? show debug entry
 -c --cstrings				# display only cstring
 
 -a --all					# display everything
-
--s --segname				# display only by segname :/ -> sectname
 
 -m --???					# affichage
 	0000000100010150 (__TEXT,__text) non-external _unicode2

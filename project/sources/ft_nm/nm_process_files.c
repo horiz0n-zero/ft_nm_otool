@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/21 14:12:26 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:43:30 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 11:47:24 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void						nm_process_files(
 				nm_process_error(bin);
 				continue ;
 			}
-			if (multi && bin->count > 0 && !bin->macho->statics)
+			if (multi && bin->count <= 1 && !bin->macho->statics)
 				ft_printf("\n%s:\n", bin->file);
 			nm_process_file(nm, bin);
 			unget_macho_binary(bin);

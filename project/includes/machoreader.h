@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:47:21 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 09:45:21 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ struct											s_symbol
 	uint8_t										type;
 	uint8_t										pad0;
 	uint16_t									desc;
-	uint32_t									pad1;
+	uint32_t									skip;
 	uint64_t									value;
 };
 struct											s_section
@@ -208,13 +208,21 @@ struct s_section								*get_macho_section(
 		const char *const sectname);
 
 // sort
+void											sort_statics(
+		struct s_staticlib_macho *const macho,
+		const int count);
 void											sort_symbols(
 		struct s_symbol *const symbols,
 		const int count,
+		const int reverse,
 		int (*const sortfunc)(struct s_symbol *const a, struct s_symbol *const b));
 int												sort_symbols_alpha(
 		struct s_symbol *const a,
 		struct s_symbol *const b);
+int												sort_symbols_numeric(
+		struct s_symbol *const a,
+		struct s_symbol *const b);
+
 
 // exception
 void											set_error(

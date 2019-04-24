@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 15:39:40 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:29:33 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/23 13:41:08 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ static inline void			fill_macho_dylib(
 	while (*bptr != '/' && bptr > dylib->path)
 		--bptr;
 	dylib->name = ++bptr;
+	bptr = dylib->name;
+	while ((*bptr >= 'a' && *bptr <= 'z') ||
+			(*bptr >= 'A' && *bptr <= 'Z'))
+		bptr++;
+	*bptr = 0;
 }
 
 void						get_macho_dylib(
@@ -56,18 +61,15 @@ void						get_macho_dylib(
 
 	if (!dylib)
 		return (set_error(binary, MRERR_MACHO));
-	++macho->dylibs_count;
+	macho->dylibs_count++;
 	if (!macho->dylibs)
-	{
 		macho->dylibs = dylib;
-		fill_macho_dylib(lc, dylib);
-	}
 	else
 	{
 		ptr = macho->dylibs;
 		while (ptr->next)
 			ptr = ptr->next;
 		ptr->next = dylib;
-		fill_macho_dylib(lc, ptr);
 	}
+	fill_macho_dylib(lc, dylib);
 }

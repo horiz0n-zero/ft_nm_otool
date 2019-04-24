@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:47:38 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 09:32:48 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ struct						s_nm
 # define NM_P 1 << 7
 # define NM_R 1 << 8
 # define NM_A 1 << 9
+# define NM_S 1 << 10
 	int						pad;
 	const struct s_nmprint	*print;
 	int						(*sortfunc)(

@@ -6,11 +6,30 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:02:59 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:49:52 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 11:55:44 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
+
+static void							nm_process_skipable(
+		struct s_nm *const nm,
+		struct s_macho *const macho)
+{
+	struct s_symbol					*symbol;
+	int								count;
+
+	count = macho->symbols_count;
+	symbol = macho->symbols;
+	while (count--)
+	{
+		if ((symbol->type & N_STAB) ||
+				((nm->flags & NM_U) && symbol->value) ||
+				((nm->flags & NM_G) && !(symbol->type & N_EXT)))
+			symbol->skip = 1;
+		symbol++;
+	}
+}
 
 static inline void					nm_process_file_statics(
 		struct s_nm *const nm,
@@ -20,8 +39,8 @@ static inline void					nm_process_file_statics(
 	while (statics)
 	{
 		ft_printf("\n%s(%s):\n", bin->file, statics->name);
-		//sort_symbols(statics->macho->symbols, statics->macho->symbols_count,
-		//		nm->sortfunc);
+		nm_process_skipable(nm, statics->macho);
+		sort_symbols(statics->macho->symbols, statics->macho->symbols_count, nm->flags & NM_R, nm->sortfunc);
 		if (statics->macho->is32)
 			nm->print->pr_symbols_32(
 					statics->macho,
@@ -41,28 +60,26 @@ void									nm_process_file(
 		struct s_macho_binary *const bin)
 {
 	int									index;
+	struct s_macho						*ptr;
 
 	index = 0;
 	while (index < bin->count)
 	{
-		if (bin->macho[index].statics)
-			nm_process_file_statics(nm, bin, bin->macho[index].statics);
+		ptr = bin->macho + index;
+		if (bin->count > 1 && !ptr->statics)
+			ft_printf("\n%s (for architecture %s):\n", bin->file, get_cputype(ptr->header->cputype, 1));
+		if (ptr->statics)
+			nm_process_file_statics(nm, bin, ptr->statics);
 		else
 		{
-			//sort_symbols(bin->macho[index].symbols,
-			//		bin->macho[index].symbols_count, nm->sortfunc);
-			if (bin->macho[index].is32)
-				nm->print->pr_symbols_32(
-						bin->macho + index,
-						bin->macho[index].symbols,
-						bin->macho[index].symbols_count);
+			nm_process_skipable(nm, ptr);
+			sort_symbols(ptr->symbols, ptr->symbols_count, nm->flags & NM_R, nm->sortfunc);
+			if (ptr->is32)
+				nm->print->pr_symbols_32(ptr, ptr->symbols, ptr->symbols_count);
 			else
-				nm->print->pr_symbols(
-						bin->macho + index,
-						bin->macho[index].symbols,
-						bin->macho[index].symbols_count);
+				nm->print->pr_symbols(ptr, ptr->symbols, ptr->symbols_count);
 		}
-		if (!(nm->flags & NM_A) && bin->macho[index].statics)
+		if (!(nm->flags & NM_A) && ptr->statics)// && ptr->macho->header & CPU_ARCH_MASK)
 			break ;
 		++index;
 	}

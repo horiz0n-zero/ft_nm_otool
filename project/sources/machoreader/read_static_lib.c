@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 15:31:55 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 12:50:16 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 09:58:56 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static void						read_static_lib_iter(
 		}
 		ptr++;
 	}
+	if (macho->statics_count)
+		sort_statics(macho->statics, macho->statics_count);
 }
 
 static void						read_static_lib_symbol_table(

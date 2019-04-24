@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/19 14:42:28 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/24 11:18:58 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void							print_macho(struct s_macho_binary *const bin, struct s_macho *const m
 
 	ft_printf("macho : is32(%d), isSwap(%d) %s %s [%s(%s)]\n", machos->is32, machos->isswap,
 		get_macho_filetype(machos->header->filetype), get_macho_header_flags(machos->header->flags),
-		get_cputype(machos->header->cputype), get_cpusubtype(machos->header->cputype, machos->header->cpusubtype));
+		get_cputype(machos->header->cputype, 0), get_cpusubtype(machos->header->cputype, machos->header->cpusubtype));
 	lc = machos->loadcommands;
 	if (lc)
 	{

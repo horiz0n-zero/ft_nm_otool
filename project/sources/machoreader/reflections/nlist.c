@@ -6,37 +6,52 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:18:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:05:12 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/23 11:19:31 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
+
+static char			*get_nlist_lazybinding(
+		struct s_symbol *const symbol,
+		char *ptr,
+		const uint8_t type)
+{
+	if (symbol->value)
+	{
+		ptr = str_push("(common) ", ptr);
+		if (GET_COMM_ALIGN(symbol->desc))
+		{
+			ptr = str_push("(alignment 2^", ptr);
+			ptr = number_push((int)GET_COMM_ALIGN(symbol->desc), ptr);
+			ptr = str_push(") ", ptr);
+		}
+	}
+	else
+	{
+		if (type == N_PBUD)
+			ptr = str_push("(prebound ", ptr);
+		else
+			ptr = str_push("(", ptr);
+		if ((symbol->desc & REFERENCE_TYPE) == REFERENCE_FLAG_UNDEFINED_LAZY)
+			ptr = str_push("undefined [lazy bound]) ", ptr);
+		else if ((symbol->desc & REFERENCE_TYPE) == REFERENCE_FLAG_PRIVATE_UNDEFINED_LAZY)
+			ptr = str_push("undefined [private lazy bound]) ", ptr);
+		else if ((symbol->desc & REFERENCE_TYPE) == REFERENCE_FLAG_PRIVATE_UNDEFINED_NON_LAZY)
+			ptr = str_push("undefined [private]) ", ptr);
+		else
+			ptr = str_push("undefined) ", ptr);
+	}
+	return (ptr);
+}
 
 static char			*get_nlist_type(
 		struct s_symbol *const symbol,
 		char *ptr,
 		const uint8_t type)
 {
-	if (type == N_PBUD)
-	{
-		if (type == N_UNDF && symbol->value)
-			ptr = str_push("(common) ", ptr);
-		else
-		{
-			if (type == N_PBUD)
-				ptr = str_push("(prebound ", ptr);
-			else
-				ptr = str_push("(", ptr);
-			if ((symbol->desc & REFERENCE_TYPE) == REFERENCE_FLAG_UNDEFINED_LAZY)
-				ptr = str_push("undefined [lazy bound]) ", ptr);
-			else if ((symbol->desc & REFERENCE_TYPE) == REFERENCE_FLAG_PRIVATE_UNDEFINED_LAZY)
-				ptr = str_push("undefined [private lazy bound]) ", ptr);
-			else if ((symbol->desc & REFERENCE_TYPE) == REFERENCE_FLAG_PRIVATE_UNDEFINED_NON_LAZY)
-				ptr = str_push("undefined [private]) ", ptr);
-			else
-				ptr = str_push("undefined) ", ptr);
-		}
-	}
+	if (type == N_UNDF)
+		return (get_nlist_lazybinding(symbol, ptr, type));
 	else if (type == N_ABS)
 		ptr = str_push("(absolute) ", ptr);
 	else if (type ==  N_INDR)
@@ -54,10 +69,8 @@ static char			*get_nlist_type(
 		else
 			ptr = str_push("(?,?) ", ptr);
 	}
-	else if (type != N_UNDF)
-		ptr = str_push("(?) ", ptr);
 	else
-		ptr = str_push("(undefined) ", ptr);
+		ptr = str_push("(?) ", ptr);
 	return (ptr);
 }
 

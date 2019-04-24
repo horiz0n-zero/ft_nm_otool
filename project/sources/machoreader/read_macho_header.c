@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/10 11:21:01 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:16:54 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/23 10:29:41 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void							macho_read_segment(
 			read_macho_segment_sections(binary, macho, loadc);
 		binary->position = position;
 	}
-	if (type == LC_LOAD_DYLIB || type == LC_LOAD_WEAK_DYLIB || type == LC_ID_DYLIB || type == LC_REEXPORT_DYLIB)
+	if (type == LC_LOAD_DYLIB || type == LC_LOAD_WEAK_DYLIB || type == LC_LAZY_LOAD_DYLIB || type == LC_REEXPORT_DYLIB)
 		get_macho_dylib(binary, macho, loadc);
 }
 
