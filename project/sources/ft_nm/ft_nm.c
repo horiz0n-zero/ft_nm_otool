@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:55:52 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 13:43:55 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:13:49 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static const struct s_argument			g_arguments[256] =
 	['g'] = {"global", NM_G, 0, NULL},
 	['u'] = {"undefined", NM_U, 0, NULL},
 	['c'] = {"cstrings", NM_C, 0, NULL},
+	['d'] = {"debug", NM_D, 0, NULL},
 
 	['a'] = {"all", NM_A, 0, NULL},
 

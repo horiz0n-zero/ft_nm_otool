@@ -6,7 +6,7 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 12:38:47 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/26 13:59:02 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/26 14:12:03 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ FLAGS_MACHOREADER = -r -arch $(shell uname -m)
 
 all: $(MACHOREADER_LIBRARY) $(FT_NM) $(FT_OTOOL) $(FT_DUMPER)
 
-$(MACHOREADER_LIBRARY): $(MACHOREADER_SOURCES) $(MACHOREADER_INCLUDES) $(MACHOREADER_OBJECTS)
+$(MACHOREADER_LIBRARY): $(MACHOREADER_INCLUDES) $(MACHOREADER_OBJECTS)
 	@ld $(addprefix $(OBJECTS_LOCATION), $(notdir $(MACHOREADER_OBJECTS))) $(FLAGS_MACHOREADER) -o $(MACHOREADER_LIBRARY)
 	@printf "\r\033[0K\033[38;5;82m$(notdir $(MACHOREADER_LIBRARY))\n"
 

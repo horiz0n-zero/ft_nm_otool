@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:02:59 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 12:56:48 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:15:56 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void								nm_process_skipable(
 	symbol = macho->symbols;
 	while (count--)
 	{
-		if ((symbol->type & N_STAB) ||
+		if (((symbol->type & N_STAB) && !(nm->flags & NM_D)) ||
 				((nm->flags & NM_U) && symbol->value) ||
 				((nm->flags & NM_G) && !(symbol->type & N_EXT)))
 			symbol->skip = 1;

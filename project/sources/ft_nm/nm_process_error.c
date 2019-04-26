@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:12:08 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 13:59:21 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 14:42:30 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ static const char	*g_usage[] =
 	"-j --just-symbol-name   Just display the symbol names (no value or type).\n",
 	"                        This option have priority on -m and -o.\n\n",
 	"-c --cstrings           Display only c strings.\n",
-	"                        This option have priority on -m, -o and -j.\n\n",
+	"                        This option have priority on -o and -j.\n",
+	"                        With -m this option also print address and length.\n\n",
 	"-g --global             Display only global (external) symbols.\n",
-	"-u --undefined          Display only undefined symbols.\n\n",
+	"-u --undefined          Display only undefined symbols.\n",
+	"-d --debug              Display also debug entry.\n\n",
 	"-n --numeric-sort       Sort numerically rather than alphabetically.\n",
 	"-p --preserve-sort      Don't sort; display in symbol-table order.\n",
 	"-r --reverse-sort       Sort in reverse order.\n\n",
