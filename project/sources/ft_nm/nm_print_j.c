@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/21 13:59:57 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 13:56:44 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 10:40:45 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@ void				nm_pr_symbols_j(
 	index = -1;
 	while (++index < count)
 	{
-		if (!(symbol + index)->section ||
-			(symbol + index)->type & N_STAB ||
-			!*(symbol + index)->name)
+		if ((symbol + index)->skip)
 			continue ;
 		ft_printf("%s\n", (symbol + index)->name);
 	}

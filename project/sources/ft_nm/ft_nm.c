@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:55:52 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 10:45:51 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 13:43:55 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@ static const struct s_nmprint			g_nmprint[] =
 		nm_pr_symbols_m32
 	},
 	{
-		nm_pr_symbols_o,
-		nm_pr_symbols_o32
-	},
-	{
 		nm_pr_symbols,
 		nm_pr_symbols32
 	}
@@ -36,7 +32,7 @@ static struct s_nm						g_nm =
 {
 	0,
 	0,
-	g_nmprint + 3,
+	g_nmprint + 2,
 	sort_symbols_alpha
 };
 
@@ -63,8 +59,6 @@ static inline void						nm_process_flags(void)
 		g_nm.print = g_nmprint;
 	else if (g_nm.flags & NM_M)
 		g_nm.print = g_nmprint + 1;
-	else if (g_nm.flags & NM_O)
-		g_nm.print = g_nmprint + 2;
 	if (g_nm.flags & NM_N)
 		g_nm.sortfunc = sort_symbols_numeric;
 	else if (g_nm.flags & NM_P)
@@ -78,6 +72,7 @@ int										main(int argc, char **argv)
 	if (!(argv = arguments_get(++argv, g_arguments, &g_nm.flags, &error)))
 	{
 		ft_fprintf(STDERR_FILENO, "ft_nm: %s\n", error);
+		nm_usage();
 		return (EXIT_FAILURE);
 	}
 	nm_process_flags();
@@ -85,7 +80,10 @@ int										main(int argc, char **argv)
 		nm_process_cstrings(&g_nm, argv);
 	else
 	{
-		nm_process_files(&g_nm, argv);
+		if (g_nm.flags & NM_O && !(g_nm.flags & NM_J))
+			nm_print_o(&g_nm, argv);
+		else
+			nm_process_files(&g_nm, argv);
 	}
 	return (EXIT_SUCCESS);
 }

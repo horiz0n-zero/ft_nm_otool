@@ -6,8 +6,14 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/18 13:13:17 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/18 13:13:23 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/26 14:04:37 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # otool options
+
+-p --private-header			# print header
+-h --headers				? show all header
+
+-a --at&t					# show assembleur in at&t
+-i --intel					# show intel default

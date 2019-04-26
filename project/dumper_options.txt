@@ -6,8 +6,13 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/18 13:13:32 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/18 13:13:48 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/26 14:05:40 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # dumper options
+
+-o --output				# redirect to file, default to stdout
+-f --force				# force generate if crypt is set
+
+-c --crypt				# show LC_ENCRYPTION details

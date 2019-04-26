@@ -6,13 +6,13 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:02:59 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 11:55:44 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 12:56:48 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-static void							nm_process_skipable(
+void								nm_process_skipable(
 		struct s_nm *const nm,
 		struct s_macho *const macho)
 {
@@ -79,7 +79,7 @@ void									nm_process_file(
 			else
 				nm->print->pr_symbols(ptr, ptr->symbols, ptr->symbols_count);
 		}
-		if (!(nm->flags & NM_A) && ptr->statics)// && ptr->macho->header & CPU_ARCH_MASK)
+		if (!(nm->flags & NM_A) && ptr->statics && (ptr->header->cputype & CPU_ARCH_MASK))
 			break ;
 		++index;
 	}

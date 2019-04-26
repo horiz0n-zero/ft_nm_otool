@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 09:32:48 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/26 13:44:10 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,6 @@ void						nm_pr_symbols_m32(
 		struct s_macho *const macho,
 		struct s_symbol *const symbols,
 		int count);
-void						nm_pr_symbols_o(
-		struct s_macho *const macho,
-		struct s_symbol *const symbols,
-		int count);
-void						nm_pr_symbols_o32(
-		struct s_macho *const macho,
-		struct s_symbol *const symbols,
-		int count);
 void						nm_pr_symbols(
 		struct s_macho *const macho,
 		struct s_symbol *const symbols,
@@ -80,7 +72,15 @@ void						nm_pr_symbols32(
 		struct s_symbol *const symbols,
 		int count);
 
+void						nm_print_o(
+		struct s_nm *const nm,
+		char **argv);
+
 # define DEFAULT_BIN "a.out"
+
+void						nm_process_skipable(
+		struct s_nm *const nm,
+		struct s_macho *const macho);
 
 void						nm_process_files(
 		struct s_nm *const nm,
@@ -95,5 +95,6 @@ void						nm_process_cstrings(
 
 void						nm_process_error(
 		struct s_macho_binary *const bin);
+void						nm_usage(void);
 
 #endif
