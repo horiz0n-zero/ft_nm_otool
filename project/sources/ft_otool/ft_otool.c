@@ -6,80 +6,39 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 11:18:58 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 14:30:16 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_otool.h"
 
-#include <stdio.h>
-
-
-void							print_macho(struct s_macho_binary *const bin, struct s_macho *const machos)
-{ // pure macho
-	struct s_loadcommand		*lc;
-	int							lcindex;
-
-	ft_printf("macho : is32(%d), isSwap(%d) %s %s [%s(%s)]\n", machos->is32, machos->isswap,
-		get_macho_filetype(machos->header->filetype), get_macho_header_flags(machos->header->flags),
-		get_cputype(machos->header->cputype, 0), get_cpusubtype(machos->header->cputype, machos->header->cpusubtype));
-	lc = machos->loadcommands;
-	if (lc)
-	{
-		lcindex = 0;
-		while (lcindex < machos->loadcommands_count)
-		{
-			printf("%#08lx %-4zd %s\n", (long)lc->content - (long)bin->content, lc->size, lc->type);
-			if (lc->segment)
-			{
-				ft_printf("-> %s\n", lc->segment->name);
-			}
-			lcindex++;
-			lc++;
-		}
-	}
-}
-
-void							ft_loop_machos(struct s_macho_binary *const bin, struct s_macho *machos, int count)
+static struct s_otool				g_otool =
 {
-	struct s_loadcommand		*lc;
-	int							lcindex;
-	struct s_staticlib_macho	*statics;
+	0,
+	0,
+	NULL,
+	otool_content_default_32,
+	otool_content_default_64
+};
 
-	while (count--)
-	{
-		if (machos->statics)
-		{
-			ft_printf("macho statics : count(%d)\n", machos->statics_count);
-			statics = machos->statics;
-			while (statics)
-			{
-				ft_printf("(%s)", statics->name);
-				print_macho(bin, statics->macho);
-				statics = statics->next;
-			}
-		}
-		else
-			print_macho(bin, machos);
-		machos++;
-	}
-}
+static const struct s_argument		g_arguments[256] =
+{
+	['p'] = {"private-header", OTOOL_P, 0, NULL},
+	['s'] = {"syntax", OTOOL_S, 1, &g_otool.syntax},
+	['d'] = {"disassembles", OTOOL_D, 0, NULL}
+};
 
 int								main(int argc, char **argv)
 {
-	struct s_macho_binary		*bin;
+	char						*error;
 
-	bin = get_macho_binary(*++argv);
-	if (bin->error)
-		write(STDOUT_FILENO, bin->error, ft_strlen(bin->error));
-	else
+	if (!(argv = arguments_get(++argv, g_arguments, &g_otool.flags, &error)) ||
+		(!*argv && (error = "at least one file must be specified")))
 	{
-		if (bin->count > 1)
-		{
-			ft_printf("file is fat : is32(%d), isSwap(%d)\n", bin->is32, bin->isswap);
-		}
-		ft_loop_machos(bin, bin->macho, bin->count);
+		ft_fprintf(STDERR_FILENO, "ft_otool: %s\n", error);
+		otool_usage();
+		return (EXIT_FAILURE);
 	}
-	unget_macho_binary(bin);
+	otool_process_files(&g_otool, argv);
 	return (0);
 }

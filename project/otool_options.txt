@@ -6,7 +6,7 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/18 13:13:17 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/26 14:04:37 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/04/29 14:11:17 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,5 +15,9 @@
 -p --private-header			# print header
 -h --headers				? show all header
 
+-d --disassembles			# disassembles the text
+
+-s --syntax syntax			# syntax choices
+#if
 -a --at&t					# show assembleur in at&t
 -i --intel					# show intel default
