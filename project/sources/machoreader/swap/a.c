@@ -6,11 +6,16 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 10:57:21 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/16 16:43:21 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 09:08:55 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
+
+inline void					swap_fatheader(struct fat_header *const fat)
+{
+	fat->nfat_arch = __builtin_bswap32(fat->nfat_arch);
+}
 
 inline void					swap_section32(struct section *const sec)
 {

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/16 15:38:10 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 12:44:16 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 09:34:03 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,7 @@ static inline void			segment_section_32(
 	sc = binary->position;
 	set_object(binary, sizeof(struct section));
 	if (macho->isswap)
-	{
 		swap_section32(sc);
-	}
 	section->sectname = sc->sectname;
 	section->segname = sc->segname;
 	section->content = (((char*)macho->header) + sc->offset);
@@ -70,9 +68,7 @@ static inline void			segment_section_64(
 	sc = binary->position;
 	set_object(binary, sizeof(struct section_64));
 	if (macho->isswap)
-	{
 		swap_section64(sc);
-	}
 	section->sectname = sc->sectname;
 	section->segname = sc->segname;
 	section->content = (((char*)macho->header) + sc->offset);
@@ -93,17 +89,14 @@ void						read_macho_segment_sections(
 		binary->position = (((char*)loadc->content) + sizeof(struct segment_command));
 	else
 		binary->position = (((char*)loadc->content) + sizeof(struct segment_command_64));
-	loadc->segment->sections = ft_memalloc(sizeof(struct s_section) * loadc->segment->count);
+	if (!(loadc->segment->sections = ft_memalloc(sizeof(struct s_section) * loadc->segment->count)))
+		return (set_error(binary, MRERR_MEM));
 	while (index < loadc->segment->count)
 	{
 		if (macho->is32)
-		{
 			segment_section_32(binary, macho, loadc, loadc->segment->sections + index);
-		}
 		else
-		{
 			segment_section_64(binary, macho, loadc, loadc->segment->sections + index);
-		}
 		if (binary->error)
 			return ;
 		++index;

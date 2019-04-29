@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:52:27 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 09:45:21 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 09:40:26 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,18 +186,6 @@ extern void										*offset_object(
 extern void										*setoffset_object(
 		struct s_macho_binary *const binary,
 		const size_t size);
-
-# define GETO(binary, seek, type) get_object(binary, seek, sizeof(type))
-# define GETSETO(binary, seek, type) getset_object(binary, seek, sizeof(type))
-# define SETO(binary, type) set_object(binary, sizeof(type))
-
-# define GET(binary, seek, size) get_object(binary, seek, (size_t)size)
-# define GETSET(binary, seek, size) getset_object(binary, seek, (size_t)size)
-# define SET(binary, size) set_object(binary, (size_t)size)
-
-# define AS(ptr, type) ((type*)ptr)
-# define MSWAP64(ptr, type) mem_swap64(ptr, sizeof(type) / sizeof(uint64_t))
-# define MSWAP32(ptr, type) mem_swap32(ptr, sizeof(type) / sizeof(uint32_t))
 
 extern struct s_loadcommand						*get_macho_first_loadcommand(
 		struct s_macho *const macho,

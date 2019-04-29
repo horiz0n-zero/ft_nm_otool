@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/12 15:31:55 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 09:58:56 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 09:38:19 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,23 +88,23 @@ void							read_static_lib(
 {
 	struct ar_hdr				*header;
 
-	if (!(header = GETSETO(binary, &binary->position, struct ar_hdr)))
+	if (!(header = getset_object(binary, &binary->position, sizeof(struct ar_hdr))))
 		return (set_error(binary, MRERR_MACHO));
-	while ((GETSET(binary, &binary->position, 1)) && *(char*)binary->position == ' ')
+	while ((getset_object(binary, &binary->position, 1)) && *(char*)binary->position == ' ')
 		continue ;
-	if (!GETO(binary, binary->position, ARFMAG) || ft_strncmp(binary->position, ARFMAG, sizeof(ARFMAG) - 1))
+	if (!get_object(binary, binary->position, sizeof(ARFMAG)) || ft_strncmp(binary->position, ARFMAG, sizeof(ARFMAG) - 1))
 		return (set_error(binary, MRERR_MACHO));
-	SET(binary, sizeof(ARFMAG) - 1);
-	if (!GETO(binary, binary->position, SYMDEF_64_SORTED))
+	set_object(binary, sizeof(ARFMAG) - 1);
+	if (!get_object(binary, binary->position, sizeof(SYMDEF_64_SORTED)))
 		return (set_error(binary, MRERR_MACHO));
 	if (!ft_strncmp(binary->position, SYMDEF_64_SORTED, sizeof(SYMDEF_64_SORTED) - 1))
-		SETO(binary, SYMDEF_64_SORTED);
+		set_object(binary, sizeof(SYMDEF_64_SORTED));
 	else if (!ft_strncmp(binary->position, SYMDEF_64, sizeof(SYMDEF_64) - 1))
-		SETO(binary, SYMDEF_64);
+		set_object(binary, sizeof(SYMDEF_64));
 	else if (!ft_strncmp(binary->position, SYMDEF_SORTED, sizeof(SYMDEF_SORTED) - 1))
-		SETO(binary, SYMDEF_SORTED);
+		set_object(binary, sizeof(SYMDEF_SORTED));
 	else if (!ft_strncmp(binary->position, SYMDEF, sizeof(SYMDEF) - 1))
-		SETO(binary, SYMDEF);
+		set_object(binary, sizeof(SYMDEF));
 	else
 		return (set_error(binary, MRERR_MACHO));
 	read_static_lib_symbol_table(binary, macho);

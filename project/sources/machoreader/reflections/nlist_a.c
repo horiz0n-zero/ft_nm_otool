@@ -6,17 +6,11 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 14:32:16 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/24 13:17:50 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 09:39:18 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "machoreader.h"
-
-/*
-**		(symbols[i].nl.n_type & N_TYPE) == N_UNDF &&
-**		symbols[i].nl.n_value == 0) ||
-**		(symbols[i].nl.n_type & N_TYPE) == N_PBUD)
-*/
 
 static inline char	get_nlist_extchar_type(
 		struct s_symbol *const symbol,

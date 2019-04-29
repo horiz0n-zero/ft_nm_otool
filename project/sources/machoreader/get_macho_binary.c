@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 13:54:05 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 13:25:29 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 10:19:10 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static inline void				read_macho_binary_file(struct s_macho_binary *const binary
 					PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0)) == MAP_FAILED)
 		return (set_error(binary, MRERR_DENIED));
 	binary->position = binary->content;
-	if (!(fat = GETO(binary, binary->position, struct fat_header)))
+	if (!(fat = get_object(binary, binary->position, sizeof(struct fat_header))))
 		return (set_error(binary, MRERR_MACHO));
 	if (read_fat_header(binary, fat))
 		return ;
@@ -82,9 +82,7 @@ struct s_macho_binary			*get_macho_binary(const char *file)
 			binary->error = MRERR_DENIED;
 		else
 		{
-			if (buf.st_mode & S_IFLNK && lstat(file, &lbuf))
-				binary->error = MRERR_NOTFOUND;
-			else if (buf.st_mode & S_IFDIR)
+			if (buf.st_mode & S_IFDIR)
 				binary->error = MRERR_ISDIR;
 			else if (!(buf.st_mode & S_IFREG))
 				binary->error = MRERR_NOTREF;

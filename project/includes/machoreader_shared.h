@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/23 11:14:45 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 10:39:44 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@
 size_t								ft_strlen(const char *const src);
 int									ft_strcmp(const char *s1, const char *s2);
 int									ft_strncmp(const void *const p1, const void *const p2, int length);
-void								mem_swap32(void *const content, size_t size);
-void								mem_swap64(void *const content, size_t size);
 void								*ft_memalloc(size_t size);
 int									ft_atoi(const char *src);
 char								*str_push(const char *src, char *ptr);
@@ -34,8 +32,6 @@ void								ft_memmove(
 		const void *src,
 		void *dst,
 		size_t size);
-
-void								fatalerror(const char *const error);
 
 struct								s_argument
 {
@@ -49,8 +45,6 @@ char								**arguments_get(char **argv,
 		const struct s_argument *const arguments,
 		int *const flags,
 		char **const error);
-
-# define W(str) write(STDOUT_FILENO, str, sizeof(str))
 
 
 #endif
