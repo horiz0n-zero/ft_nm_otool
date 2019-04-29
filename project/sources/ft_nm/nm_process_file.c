@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:02:59 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 14:15:56 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 12:45:59 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,16 @@ void									nm_process_file(
 {
 	int									index;
 	struct s_macho						*ptr;
+	int									select;
 
-	index = 0;
+	if (nm->flags & NM_A && !(select = 0))
+		index = 0;
+	else
+		index = select_arch(bin, &select);
 	while (index < bin->count)
 	{
 		ptr = bin->macho + index;
-		if (bin->count > 1 && !ptr->statics)
+		if (bin->count > 1 && !ptr->statics && !select)
 			ft_printf("\n%s (for architecture %s):\n", bin->file, get_cputype(ptr->header->cputype, 1));
 		if (ptr->statics)
 			nm_process_file_statics(nm, bin, ptr->statics);
@@ -79,7 +83,7 @@ void									nm_process_file(
 			else
 				nm->print->pr_symbols(ptr, ptr->symbols, ptr->symbols_count);
 		}
-		if (!(nm->flags & NM_A) && ptr->statics && (ptr->header->cputype & CPU_ARCH_MASK))
+		if (select)
 			break ;
 		++index;
 	}

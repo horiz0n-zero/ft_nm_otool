@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:12:08 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 14:42:30 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 10:56:04 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static const char	*g_usage[] =
 	"-n --numeric-sort       Sort numerically rather than alphabetically.\n",
 	"-p --preserve-sort      Don't sort; display in symbol-table order.\n",
 	"-r --reverse-sort       Sort in reverse order.\n\n",
-	"-a --all                Display all architecture available.\n"
+	"-a --all-arch           Display all architecture available.\n"
 };
 
 void				nm_usage(void)

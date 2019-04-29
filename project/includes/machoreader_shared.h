@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 10:39:44 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 12:42:01 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,10 @@ char								**arguments_get(char **argv,
 		int *const flags,
 		char **const error);
 
+typedef struct s_macho_binary		t_macho_binary;
+
+int									select_arch(
+		struct s_macho_binary *const binary,
+		int *const select);
 
 #endif

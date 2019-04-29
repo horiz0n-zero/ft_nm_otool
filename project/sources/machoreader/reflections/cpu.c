@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:18:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 10:37:59 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/29 11:22:19 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static const struct s_cputype_reflection	g_cputypes[] =
 	{CPU_TYPE_ANY, "ANY", "all"},
 	{CPU_TYPE_VAX, "VAX", "vax"},
 	{CPU_TYPE_MC680x0, "MC680x0", "mc680"},
-	{CPU_TYPE_X86, "X86", "i386"},
 	{CPU_TYPE_I386, "I386", "i386"},
+	{CPU_TYPE_X86, "X86", "x86"},
 	{CPU_TYPE_X86_64, "X86_64", "x86-64"},
 	{CPU_TYPE_MC98000, "MC98000", "mc98000"},
 	{CPU_TYPE_HPPA, "HPPA", "hppa"},
@@ -164,7 +164,7 @@ const char									*get_cputype(
 			else
 				return (g_cputypes[index].reflection);
 		}
-		index++;
+		++index;
 	}
 	return ("???");
 }
