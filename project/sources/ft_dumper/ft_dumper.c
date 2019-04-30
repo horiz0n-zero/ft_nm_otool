@@ -6,85 +6,59 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 16:23:36 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/30 14:05:50 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_dumper.h"
 
-static void					print_symtab(struct s_macho *const macho)
+static struct s_dumper			g_dumper =
 {
-	int						index;
-	struct s_dylib			*ptr;
+	0,
+	0,
+	NULL
+};
+
+static const struct s_argument	g_arguments[256] =
+{
+	['o'] = {"output", DUMPER_O, 1, &g_dumper.output},
+	['s'] = {"show-crypt", DUMPER_S, 0, NULL}
+};
+
+static const char				*g_usages[] =
+{
+	"usage:\n\n",
+	"-o --output file          generate header into file\n",
+	"-s --show-crypt           show information about LC_ENCRYPTION_INFO(_64)\n"
+};
+
+static void						dumper_usage(void)
+{
+	int							index;
 
 	index = 0;
-	while (index < macho->symbols_count)
+	while (index < (sizeof(g_usages) / sizeof(g_usages[0])))
 	{
-		if (macho->symbols[index].section)
-		{
-			ft_printf("(%s, %s) %s\n", macho->symbols[index].section->sectname,
-					macho->symbols[index].section->segname, macho->symbols[index].name);
-		}
-		else
-		{
-			ft_printf("external %s\n", macho->symbols[index].name);
-		}
-		index++;
-	}
-	index = 0;
-	ptr = macho->dylibs;
-	while (index < macho->dylibs_count)
-	{
-		ft_printf("%s(%s)\n", ptr->path, ptr->name);
-		ptr = ptr->next;
-		index++;
+		write(STDERR_FILENO, g_usages[index], ft_strlen(g_usages[index]));
+		++index;
 	}
 }
 
-static void					read_statics(struct s_staticlib_macho *m)
+int								main(int argc, char **argv)
 {
-	while (m)
+	char						*error;
+
+	if (!(argv = arguments_get(++argv, g_arguments, &g_dumper.flags, &error)))
 	{
-		ft_printf("%s:\n", m->name);
-		print_symtab(m->macho);
-		m = m->next;
+		ft_fprintf(STDERR_FILENO, "ft_dumper: %s\n", error);
+		dumper_usage();
+		return (EXIT_FAILURE);
 	}
-}
-
-static void					process(struct s_macho_binary *const bin)
-{
-	int						index;
-	struct s_macho			*macho;
-	struct s_loadcommand	*lc;
-	struct symtab_command	*sc;
-
-	index = 0;
-	while (index < bin->count)
+	if (g_dumper.flags & DUMPER_S)
+		dumper_show_lc_encryption(argv);
+	else
 	{
-		macho = bin->macho + index++;
-		if (macho->statics)
-		{
-			read_statics(macho->statics);
-		}
-		else
-			print_symtab(macho);
+		
 	}
-}
-
-int							main(int argc, char **argv)
-{
-	char					*error;
-	int						flags;
-	struct s_macho_binary	*bin;
-
-	flags = 0;
-	if (*++argv)
-	{
-		bin = get_macho_binary(*argv);
-		if (bin->error)
-			write(STDERR_FILENO, bin->error, ft_strlen(bin->error));
-		else
-			process(bin);
-	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
