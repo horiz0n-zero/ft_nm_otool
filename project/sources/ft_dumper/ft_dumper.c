@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/30 14:05:50 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/04/30 16:52:44 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,17 @@ static struct s_dumper			g_dumper =
 static const struct s_argument	g_arguments[256] =
 {
 	['o'] = {"output", DUMPER_O, 1, &g_dumper.output},
-	['s'] = {"show-crypt", DUMPER_S, 0, NULL}
+	['s'] = {"show-crypt", DUMPER_S, 0, NULL},
+	['u'] = {"uuid", DUMPER_U, 0, NULL}
 };
 
 static const char				*g_usages[] =
 {
 	"usage:\n\n",
-	"-o --output file          generate header into file\n",
-	"-s --show-crypt           show information about LC_ENCRYPTION_INFO(_64)\n"
+	"-o --output file          generate header into file.\n",
+	"-s --show-crypt           Show information about LC_ENCRYPTION_INFO(_64).\n"
+	"-u --uuid                 Show Universally Unique IDentifier (UUID)\n",
+	"                          a 128-bit value guaranteed to be unique over both space and time.\n"
 };
 
 static void						dumper_usage(void)
@@ -56,7 +59,9 @@ int								main(int argc, char **argv)
 	}
 	if (g_dumper.flags & DUMPER_S)
 		dumper_show_lc_encryption(argv);
-	else
+	if (g_dumper.flags & DUMPER_U)
+		dumper_show_uuid(argv);
+	if (!(g_dumper.flags & (DUMPER_S | DUMPER_U)))
 	{
 		
 	}
