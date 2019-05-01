@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:55:52 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 10:55:41 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/01 15:31:38 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static const struct s_argument			g_arguments[256] =
 
 	['g'] = {"global", NM_G, 0, NULL},
 	['u'] = {"undefined", NM_U, 0, NULL},
-	['c'] = {"cstrings", NM_C, 0, NULL},
+	['s'] = {"strings", NM_S, 0, NULL},
 	['d'] = {"debug", NM_D, 0, NULL},
 
 	['a'] = {"all-arch", NM_A, 0, NULL},
@@ -77,8 +77,8 @@ int										main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	nm_process_flags();
-	if (g_nm.flags & NM_C)
-		nm_process_cstrings(&g_nm, argv);
+	if (g_nm.flags & NM_S)
+		nm_process_strings(&g_nm, argv);
 	else
 	{
 		if (g_nm.flags & NM_O && !(g_nm.flags & NM_J))

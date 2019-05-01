@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:12:08 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 10:56:04 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/01 15:38:51 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ static const char	*g_usage[] =
 	"                        This option have priority on -m.\n",
 	"-j --just-symbol-name   Just display the symbol names (no value or type).\n",
 	"                        This option have priority on -m and -o.\n\n",
-	"-c --cstrings           Display only c strings.\n",
+	"-s --strings            Display only strings from following sections:\n",
+	"                        (__TEXT, __cstring)\n",
+	"                        (__TEXT, __objc_methname) (__TEXT, __objc_classname)\n",
 	"                        This option have priority on -o and -j.\n",
 	"                        With -m this option also print address and length.\n\n",
 	"-g --global             Display only global (external) symbols.\n",

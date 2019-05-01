@@ -6,21 +6,24 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:07:39 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/22 09:55:49 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/01 16:03:54 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_nm.h"
 
-void								cstrings_multi_macho(
-		struct s_macho *const macho)
+static void							cstrings_multi_macho(
+		struct s_macho *const macho,
+		const char *const segname,
+		const char *const sect)
 {
 	struct s_section				*section;
 	char							*ptr;
 	char							*end_ptr;
 
-	if ((section = get_macho_section(macho, SEG_TEXT, "__cstring")))
+	if ((section = get_macho_section(macho, segname, sect)))
 	{
+		ft_printf("Section (%s,%s):\n", segname, sect);
 		ptr = section->content;
 		end_ptr = ptr + section->content_size;
 		while (ptr < end_ptr)
@@ -37,15 +40,18 @@ void								cstrings_multi_macho(
 	}
 }
 
-void								cstrings_macho(
-		struct s_macho *const macho)
+static void							cstrings_macho(
+		struct s_macho *const macho,
+		const char *const segname,
+		const char *const sect)
 {
 	struct s_section				*section;
 	char							*ptr;
 	char							*end_ptr;
 
-	if ((section = get_macho_section(macho, SEG_TEXT, "__cstring")))
+	if ((section = get_macho_section(macho, segname, sect)))
 	{
+		ft_printf("Section (%s,%s):\n", segname, sect);
 		ptr = section->content;
 		end_ptr = ptr + section->content_size;
 		while (ptr < end_ptr)
@@ -59,9 +65,11 @@ void								cstrings_macho(
 	}
 }
 
-void								cstrings_file(
+static void							cstrings_file(
 		const char *const file,
-		void (*const proc)(struct s_macho *const macho),
+		void (*const proc)(struct s_macho *const macho,
+			const char *const segname,
+			const char *const section),
 		const int multiple)
 {
 	struct s_macho_binary *const	bin = get_macho_binary(file);
@@ -81,18 +89,24 @@ void								cstrings_file(
 			while (statics)
 			{
 				ft_printf("\n%s(%s):\n", file, statics->name);
-				proc(statics->macho);
+				proc(statics->macho, SEG_TEXT, "__cstring");
+				proc(statics->macho, SEG_TEXT, "__objc_methname");
+				proc(statics->macho, SEG_TEXT, "__objc_classname");
 				statics = statics->next;
 			}
 		}
 		else
-			proc(bin->macho + index);
+		{
+			proc(bin->macho + index, SEG_TEXT, "__cstring");
+			proc(bin->macho + index, SEG_TEXT, "__objc_methname");
+			proc(bin->macho + index, SEG_TEXT, "__objc_classname");
+		}
 		++index;
 	}
 	unget_macho_binary(bin);
 }
 
-void								nm_process_cstrings(
+void								nm_process_strings(
 		struct s_nm *const nm,
 		char **argv)
 {

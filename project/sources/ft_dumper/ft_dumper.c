@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/30 16:52:44 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/01 15:19:28 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static struct s_dumper			g_dumper =
 {
 	0,
 	0,
-	NULL
+	NULL,
+	STDOUT_FILENO
 };
 
 static const struct s_argument	g_arguments[256] =
@@ -47,6 +48,23 @@ static void						dumper_usage(void)
 	}
 }
 
+static void						dumper_process(const char *const file)
+{
+	struct s_macho_binary		*bin;
+
+	if (g_dumper.flags & DUMPER_O)
+		if ((g_dumper.fdoutput = open(g_dumper.output, O_WRONLY | O_CREAT | O_TRUNC, S_IWOTH | S_IROTH | S_IWGRP | S_IRGRP)) < 0)
+			return ((void)(ft_fprintf(STDERR_FILENO, "ft_dumper: cannot create %s\n", g_dumper.output)));
+	bin = get_macho_binary(file);
+	if (bin->error)
+		ft_fprintf(STDERR_FILENO, "ft_dumper: %s: %s.\n", file, bin->error);
+	else
+	{
+		dumper_generate_header(&g_dumper, bin);
+	}
+	unget_macho_binary(bin);
+}
+
 int								main(int argc, char **argv)
 {
 	char						*error;
@@ -63,7 +81,12 @@ int								main(int argc, char **argv)
 		dumper_show_uuid(argv);
 	if (!(g_dumper.flags & (DUMPER_S | DUMPER_U)))
 	{
-		
+		if (*argv && *(argv + 1))
+			ft_fprintf(STDERR_FILENO, "ft_dumper: can only generate header for one specified file\n");
+		else if (!*argv)
+			dumper_process("a.out");
+		else
+			dumper_process(*argv);
 	}
 	return (EXIT_SUCCESS);
 }

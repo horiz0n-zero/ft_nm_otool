@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:43:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/26 14:13:44 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/01 15:38:29 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ struct						s_nm
 # define NM_A 1 << 9
 # define NM_S 1 << 10
 # define NM_D 1 << 11
+
 	int						pad;
 	const struct s_nmprint	*print;
 	int						(*sortfunc)(
@@ -90,7 +91,7 @@ void						nm_process_file(
 		struct s_nm *const nm,
 		struct s_macho_binary *const bin);
 
-void						nm_process_cstrings(
+void						nm_process_strings(
 		struct s_nm *const nm,
 		char **argv);
 

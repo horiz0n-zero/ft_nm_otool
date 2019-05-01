@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/30 16:50:08 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/01 16:32:27 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_DUMPER_H
 
 # include "machoreader.h"
+# include "objective_c.h"
 
 struct								s_dumper
 {
@@ -25,10 +26,16 @@ struct								s_dumper
 	int								pad;
 
 	char							*output;
+	int								fdoutput;
+
+	
 };
 
 void								dumper_show_lc_encryption(char **argv);
-
 void								dumper_show_uuid(char **argv);
+
+void								dumper_generate_header(
+		struct s_dumper *const dumper,
+		struct s_macho_binary *const bin);
 
 #endif
