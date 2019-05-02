@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/01 15:19:28 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/02 12:25:37 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,15 @@
 static struct s_dumper			g_dumper =
 {
 	0,
-	0,
+	STDOUT_FILENO,
 	NULL,
-	STDOUT_FILENO
+
+	NULL,
+	NULL,
+	NULL,
+
+	NULL,
+	0
 };
 
 static const struct s_argument	g_arguments[256] =
@@ -48,9 +54,21 @@ static void						dumper_usage(void)
 	}
 }
 
+static inline void				dumper_process_generate(
+		struct s_macho_binary *const bin,
+		struct s_macho *const macho)
+{
+	dumper_generate_header(&g_dumper, bin);
+	dumper_read_class(&g_dumper, bin, macho);
+	if (bin->error)
+		return ((void)ft_fprintf(STDERR_FILENO, "ft_dumper: %s: %s.\n", bin->file, bin->error));
+}
+
 static void						dumper_process(const char *const file)
 {
 	struct s_macho_binary		*bin;
+	int							select;
+	int							index;
 
 	if (g_dumper.flags & DUMPER_O)
 		if ((g_dumper.fdoutput = open(g_dumper.output, O_WRONLY | O_CREAT | O_TRUNC, S_IWOTH | S_IROTH | S_IWGRP | S_IRGRP)) < 0)
@@ -60,7 +78,13 @@ static void						dumper_process(const char *const file)
 		ft_fprintf(STDERR_FILENO, "ft_dumper: %s: %s.\n", file, bin->error);
 	else
 	{
-		dumper_generate_header(&g_dumper, bin);
+		index = select_arch(bin, &select);
+		if (dumper_get_sections(bin->macho + index, &g_dumper))
+			ft_fprintf(STDERR_FILENO, "ft_dumper: %s: no objc data.\n", file);
+		else if (bin->macho[index].statics)
+			ft_fprintf(STDERR_FILENO, "ft_dumper: %s: archive unsupported.\n", file);
+		else
+			dumper_process_generate(bin, bin->macho + index);
 	}
 	unget_macho_binary(bin);
 }

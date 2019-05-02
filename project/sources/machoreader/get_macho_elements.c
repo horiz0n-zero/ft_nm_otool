@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/18 12:36:24 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/21 12:37:06 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/02 09:18:20 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ struct s_section					*get_macho_section(
 		const char *const sectname)
 {
 	int								index;
+	const int						lseg = (int)ft_strlen(segname);
+	const int						lsect = (int)ft_strlen(sectname);
 
 	index = 0;
 	while (index < macho->sections_count)
 	{
-		if (!ft_strcmp(macho->sections[index]->segname, segname) &&
-				!ft_strcmp(macho->sections[index]->sectname, sectname))
+		if (!ft_strncmp(macho->sections[index]->segname, segname, lseg) &&
+				!ft_strncmp(macho->sections[index]->sectname, sectname, lsect))
 			return (macho->sections[index]);
 		++index;
 	}
