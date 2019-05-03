@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 13:37:55 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/11 14:01:21 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/03 09:20:07 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static const struct s_32_reflection	g_magics[] =
 {
-	{MH_MAGIC, "MH_MAGIC"},
-	{MH_CIGAM, "MH_CIGAM"},
+	{MH_MAGIC, "MH_MAGIC_32"},
+	{MH_CIGAM, "MH_CIGAM_32"},
 	{MH_MAGIC_64, "MH_MAGIC_64"},
 	{MH_CIGAM_64, "MH_CIGAM_64"},
 	{FAT_MAGIC, "FAT_MAGIC"},

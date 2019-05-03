@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:57:45 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 14:30:16 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/03 09:59:18 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static struct s_otool				g_otool =
 static const struct s_argument		g_arguments[256] =
 {
 	['p'] = {"private-header", OTOOL_P, 0, NULL},
-	['s'] = {"syntax", OTOOL_S, 1, &g_otool.syntax},
-	['d'] = {"disassembles", OTOOL_D, 0, NULL}
+	['h'] = {"headers", OTOOL_H, 0, NULL},
+	['m'] = {"multi", OTOOL_M, 0, NULL}
 };
 
 int								main(int argc, char **argv)

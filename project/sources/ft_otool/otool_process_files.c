@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 14:27:15 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 15:41:18 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/03 10:19:17 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,14 @@ static inline void				otool_proc_macho(
 {
 	struct s_section			*section;
 
-	if ((section = get_macho_section(macho, SEG_TEXT, SECT_TEXT)))
+	if (otool->flags & (OTOOL_P | OTOOL_H))
+	{
+		if (otool->flags & OTOOL_P)
+			otool_private_header(otool, macho);
+		if (otool->flags & OTOOL_H)
+			otool_headers(otool, macho);
+	}
+	else if ((section = get_macho_section(macho, SEG_TEXT, SECT_TEXT)))
 	{
 		ft_printf("Contents of (%s,%s) section\n", SEG_TEXT, SECT_TEXT);
 		if (macho->is32)

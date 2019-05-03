@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 12:49:24 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/03 11:07:02 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,7 @@ typedef struct s_macho_binary		t_macho_binary;
 int									select_arch(
 		struct s_macho_binary *const binary,
 		int *const select);
+
+char								*get_timestamp(const uint32_t timestamp);
 
 #endif
