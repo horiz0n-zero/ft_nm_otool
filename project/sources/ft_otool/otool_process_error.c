@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/29 13:00:14 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/30 11:56:57 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 11:54:53 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 static const char			*g_usage[] =
 {
 	"usage:\n\n",
-	"-p --private-header      Display only the first format specific file header\n",
-	"-s --syntax syntax       ASM syntax to use.\n"
+	"-p --private-header      Display mach file header(s)\n",
+	"-h --headers             Display load commands and section(s)\n",
+	"-m --multi               Display more information if possible.\n"
 };
 
 void						otool_usage(void)

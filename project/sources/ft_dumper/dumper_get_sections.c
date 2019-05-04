@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 10:18:58 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/02 11:02:17 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 11:37:41 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,8 @@ int						dumper_get_sections(
 		}
 	}
 	dumper_get_proto_cat(macho, dumper);
+	dumper->encryption = get_macho_first_loadcommand(macho, LC_ENCRYPTION_INFO);
+	if (!dumper->encryption)
+		dumper->encryption = get_macho_first_loadcommand(macho, LC_ENCRYPTION_INFO_64);
 	return (0);
 }

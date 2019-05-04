@@ -6,63 +6,43 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 10:54:11 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/02 16:27:43 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 16:42:23 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_dumper.h"
 
-static struct s_section				*class_section_location(
-		struct s_macho *const macho,
-		struct s_class *const c)
-{
-	int								index;
-	uint64_t						addr;
-	uint64_t						addr_end;
-
-	index = -1;
-	if (macho->is32)
-	{
-		while (++index < macho->sections_count)
-		{
-			addr = (uint64_t)
-				((struct section*)macho->sections[index]->sectname)->addr;
-			addr_end = addr + (uint64_t)
-				((struct section*)macho->sections[index]->sectname)->size;
-			if (c->value >= addr && c->value <= addr_end)
-				return (macho->sections[index]);
-		}
-	}
-	else
-	{
-		while (++index < macho->sections_count)
-		{
-			addr =
-				((struct section_64*)macho->sections[index]->sectname)->addr;
-			addr_end = addr +
-				((struct section_64*)macho->sections[index]->sectname)->size;
-			if (c->value >= addr && c->value <= addr_end)
-				return (macho->sections[index]);
-		}
-	}
-	return (NULL);
-}
-
-void								read_class(
+static void							read_class(
 		struct s_dumper *const dumper,
 		struct s_macho_binary *const bin,
 		struct s_macho *const macho,
 		struct s_class *const c)
 {
-	char							*ptr;
-	struct s_section *const			section = class_section_location(macho, c);
-	/*
-	ptr = ((char*)macho->header) + class->value;
-	class->class = (void*)ptr;
-	class->isswift = class->class->data & 0x1;
-	class->class->data = class->class->data & ~7;
-	ptr = ((char*)macho->header) + class->class->data;
-	class->ro = (void*)ptr;*/
+	struct s_section *const			section = section_addr_location(macho, c->value);
+
+	if (!section)
+		dumper_fatal("no section found.\n");
+	c->class = section_addr_offset(macho, section, c->value);
+	if (macho->isswap)
+		swap_class(c->class);
+	c->isswift = c->class->data & 0x1;
+	c->class->data = c->class->data & ~7;
+	if (c->class->data) // do research section ? || don't checked otherwise in methods ...
+	{
+		c->ro = section_addr_offset(macho, section, c->class->data);
+		if (macho->isswap)
+			swap_class_ro(c->ro);
+		c->name = section_addr_name(macho, c->ro->name);
+		dumper_read_methods(dumper, macho, c);
+		dumper_read_instances(dumper, macho, c);
+		dumper_read_properties(dumper, macho, c);
+		if (c->class->superclass)
+		{
+			c->superclass = ft_memalloc(sizeof(struct s_class));
+			c->superclass->value = c->class->superclass;
+			read_class(dumper, bin, macho, c->superclass);
+		}
+	}
 }
 
 void								dumper_read_class(
@@ -83,7 +63,10 @@ void								dumper_read_class(
 	dumper->class = class;
 	while (ptr < end_file)
 	{
-		class->value = *ptr++;
+		if (macho->isswap)
+			class->value = __builtin_bswap64(*ptr++);
+		else
+			class->value = *ptr++;
 		read_class(dumper, bin, macho, class);
 		if (bin->error)
 			break ;

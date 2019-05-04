@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/02 12:25:37 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 14:22:29 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,19 @@ static const struct s_argument	g_arguments[256] =
 {
 	['o'] = {"output", DUMPER_O, 1, &g_dumper.output},
 	['s'] = {"show-crypt", DUMPER_S, 0, NULL},
-	['u'] = {"uuid", DUMPER_U, 0, NULL}
+	['u'] = {"uuid", DUMPER_U, 0, NULL},
+	['f'] = {"force", DUMPER_F, 0, NULL}
 };
 
 static const char				*g_usages[] =
 {
 	"usage:\n\n",
-	"-o --output file          generate header into file.\n",
+	"-o --output file          Redirect output to file.\n",
 	"-s --show-crypt           Show information about LC_ENCRYPTION_INFO(_64).\n"
 	"-u --uuid                 Show Universally Unique IDentifier (UUID)\n",
 	"                          a 128-bit value guaranteed to be unique over both space and time.\n"
+	"-f --force                Force the generation of the header,\n",
+	"                          even if LC_ENCRYPTION is set. this option can cause a crash or a bad result\n"
 };
 
 static void						dumper_usage(void)
@@ -58,8 +61,8 @@ static inline void				dumper_process_generate(
 		struct s_macho_binary *const bin,
 		struct s_macho *const macho)
 {
-	dumper_generate_header(&g_dumper, bin);
 	dumper_read_class(&g_dumper, bin, macho);
+	dumper_generate_header(&g_dumper, bin);
 	if (bin->error)
 		return ((void)ft_fprintf(STDERR_FILENO, "ft_dumper: %s: %s.\n", bin->file, bin->error));
 }
@@ -83,6 +86,9 @@ static void						dumper_process(const char *const file)
 			ft_fprintf(STDERR_FILENO, "ft_dumper: %s: no objc data.\n", file);
 		else if (bin->macho[index].statics)
 			ft_fprintf(STDERR_FILENO, "ft_dumper: %s: archive unsupported.\n", file);
+		else if (g_dumper.encryption && !(g_dumper.flags & DUMPER_F) &&
+				((struct encryption_info_command*)g_dumper.encryption->content)->cryptid)
+			ft_fprintf(STDERR_FILENO, "ft_dumper: %s: file is encrypted.\n", file);
 		else
 			dumper_process_generate(bin, bin->macho + index);
 	}

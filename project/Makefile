@@ -6,7 +6,7 @@
 #    By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/21 12:38:47 by afeuerst          #+#    #+#              #
-#    Updated: 2019/04/30 17:00:53 by afeuerst         ###   ########.fr        #
+#    Updated: 2019/05/04 12:58:54 by afeuerst         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,13 +45,19 @@ $(MACHOREADER_LIBRARY): $(MACHOREADER_INCLUDES) $(MACHOREADER_OBJECTS)
 	@printf "\r\033[0K\033[38;5;226m%-30s -> \033[38;5;154m%s\033[0m" $(notdir $<) $(notdir $@)
 
 $(FT_NM): $(FT_NM_SOURCES) $(FT_NM_INCLUDES) $(MACHOREADER_LIBRARY)
-	clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_NM_SOURCES) $(FLAGS) -o $(FT_NM)
+	@printf "\r\033[0K\033[38;5;226m%s" $@
+	@clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_NM_SOURCES) $(FLAGS) -o $(FT_NM)
+	@printf "\r\033[0K\033[38;5;82m%s\n" $@
 
 $(FT_OTOOL): $(FT_OTOOL_SOURCES) $(FT_OTOOL_INCLUDES) $(MACHOREADER_LIBRARY)
-	clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_OTOOL_SOURCES) $(FLAGS) -o $(FT_OTOOL)
+	@printf "\r\033[0K\033[38;5;226m%s" $@
+	@clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_OTOOL_SOURCES) $(FLAGS) -o $(FT_OTOOL)
+	@printf "\r\033[0K\033[38;5;82m%s\n" $@
 
 $(FT_DUMPER): $(FT_DUMPER_SOURCES) $(FT_DUMPER_INCLUDES) $(MACHOREADER_LIBRARY)
-	clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_DUMPER_SOURCES) $(FLAGS) -o $(FT_DUMPER)
+	@printf "\r\033[0K\033[38;5;226m%s" $@
+	@clang -I $(INCLUDES) $(MACHOREADER_LIBRARY) $(FT_DUMPER_SOURCES) $(FLAGS) -o $(FT_DUMPER)
+	@printf "\r\033[0K\033[38;5;82m%s\n" $@
 
 clean:
 	rm -rf $(MACHOREADER_LIBRARY).dSYM $(FT_NM).dSYM $(FT_OTOOL).dSYM $(FT_DUMPER).dSYM
