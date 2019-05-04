@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/11 09:19:23 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/04/29 09:47:08 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 08:59:11 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,5 @@ extern void								swap_mach32(
 		struct mach_header *const header);
 extern void								swap_mach64(
 		struct mach_header_64 *const header);
-
 
 #endif

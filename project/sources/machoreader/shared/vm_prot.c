@@ -1,27 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_note.c                                       :+:      :+:    :+:   */
+/*   vm_prot.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/05/03 16:43:58 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/03 17:03:39 by afeuerst         ###   ########.fr       */
+/*   Created: 2019/05/04 10:05:08 by afeuerst          #+#    #+#             */
+/*   Updated: 2019/05/04 10:05:10 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_otool.h"
+#include "machoreader_shared.h"
 
-void							print_note(
-		struct s_loadcommand *const lc)
+const char			*get_vm_prot(const vm_prot_t prot)
 {
-	struct note_command *const	n = lc->content;
-	int					index;
+	static char		buffer[4] = {'-', '-', '-', 0};
 
-	index = 0;
-	ft_printf("%22s ", "data_owner");
-	while (index < 16 && n->data_owner[index])
-		write(STDOUT_FILENO, n->data_owner + index++, 1);
-	ft_printf("\n%22s %llu\n", "offset", n->offset);
-	ft_printf("%22s %llu\n", "size", n->size);
+	if (prot & PROT_READ)
+		buffer[0] = 'r';
+	else
+		buffer[0] = '-';
+	if (prot & PROT_WRITE)
+		buffer[1] = 'w';
+	else
+		buffer[1] = '-';
+	if (prot & PROT_EXEC)
+		buffer[2] = 'x';
+	else
+		buffer[2] = '-';
+	return (buffer);
 }

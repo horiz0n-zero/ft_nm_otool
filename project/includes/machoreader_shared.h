@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/03 11:07:02 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 10:36:06 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <fcntl.h> // open
 # include <sys/stat.h> // fstat
 # include <sys/mman.h> // mmap - munmap
+# include <mach/vm_prot.h> // vm
 
 size_t								ft_strlen(const char *const src);
 int									ft_strcmp(const char *s1, const char *s2);
@@ -53,5 +54,6 @@ int									select_arch(
 		int *const select);
 
 char								*get_timestamp(const uint32_t timestamp);
+const char							*get_vm_prot(const vm_prot_t prot);
 
 #endif

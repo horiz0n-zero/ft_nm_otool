@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/03 10:43:39 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/03 16:24:58 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 10:42:05 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ void								print_dylib(
 {
 	struct dylib_command			*const d = lc->content;
 
+	if (lc->pad)
+	{
+		d->dylib.name.offset = __builtin_bswap32(d->dylib.name.offset);
+		d->dylib.current_version = __builtin_bswap32(d->dylib.current_version);
+		d->dylib.compatibility_version = __builtin_bswap32(d->dylib.compatibility_version);
+	}
 	ft_printf("%22s %s\n", "name", ((char*)lc->content) + d->dylib.name.offset);
 	ft_printf("%22s %s", "timestamp", get_timestamp(d->dylib.timestamp));
 	ft_printf("%22s %u.%u.%u\n", "current_version",

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/21 12:44:30 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/03 16:55:14 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 09:41:11 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ void						print_symseg(struct s_loadcommand *const lc);
 void						print_fvmfile_command(struct s_loadcommand *const lc);
 void						print_main(struct s_loadcommand *const lc);
 void						print_source_version(struct s_loadcommand *const lc);
-void						print_note(struct s_loadcommand *const lc);
+
+void						print_segment_sections32(struct s_segment *const segment);
+void						print_segment_sections64(struct s_segment *const segment);
 
 #endif

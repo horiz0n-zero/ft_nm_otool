@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/03 09:35:38 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/03 16:48:59 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/04 10:37:57 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ static const struct s_header	g_headers[] =
 	{LC_PREBOUND_DYLIB, 0, print_prebound},
 	{LC_IDFVMLIB, 0, print_fvmlib},
 	{LC_LOADFVMLIB, 0, print_fvmlib},
-	{LC_FVMFILE, 0, print_fvmfile_command},
-	{LC_NOTE, 0, print_note}
+	{LC_FVMFILE, 0, print_fvmfile_command}
 };
 
 void							otool_headers(
@@ -81,6 +80,7 @@ void							otool_headers(
 		{
 			if (g_headers[i].cmd == lc->cmdtype)
 			{
+				lc->pad = macho->isswap;
 				g_headers[i].print(lc);
 				break ;
 			}
