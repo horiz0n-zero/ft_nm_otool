@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/01 10:09:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/04 16:47:36 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/05 16:47:23 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,102 @@ static inline void		dumper_generate_header_print_date(const int fd)
 			local->tm_sec);
 }
 
-static void				print_class(struct s_class *const c, const int index)
+static void				_print_instances(struct s_instance_var *ivars, const int count)
 {
-	struct s_method		*m;
+	int					ivarsindex;
+
+	ivarsindex = 0;
+	ft_printf("%28s instances { %d }\n", "", count);
+	while (ivarsindex < count)
+	{
+		ft_printf("%28s %016llx\n", "offset", ivars->ivar->offset);
+		ft_printf("%28s %016llx %s\n", "name", ivars->ivar->name, ivars->name);
+		ft_printf("%28s %016llx %s\n", "type", ivars->ivar->type, ivars->type);
+		ft_printf("%28s %08x\n", "alignment", ivars->ivar->alignment);
+		ft_printf("%28s %08x\n", "size", ivars->ivar->size);
+		if (++ivarsindex < count)
+			ft_printf("\n");
+		ivars++;
+	}
+}
+
+static void				_print_method(struct s_method *m, const int count)
+{
 	int					mindex;
-	struct s_instance_var	*ivars;
-	int						ivarsindex;
-	struct s_property		*pr;
+
+	mindex = 0;
+	while (mindex < count)
+	{
+		ft_printf("%28s ---------------------\n", "");
+		ft_printf("%28s - %016llx %s\n", "name", m->method->name, m->name);
+		ft_printf("%28s - %016llx %s\n", "types", m->method->types, m->types);
+		ft_printf("%28s - %016llx\n", "imp", m->method->imp);
+		if (++mindex >= count)
+			ft_printf("%28s ---------------------\n", "");
+		m++;
+	}
+}
+
+static void				_print_properties(struct s_property *pr, const int count)
+{
 	int						prindex;
 
-	if (index < 0)
-		ft_printf(">--------------------> %s\n", c->name);
+	prindex = 0;
+	ft_printf("%28s properties { %d }\n", "", count);
+	while (prindex < count)
+	{
+		ft_printf("%28s %016llx %s\n", "name", pr->property->name, pr->name);
+		ft_printf("%28s %016llx %s\n", "attributes", pr->property->attributes, pr->attributes);
+		if (++prindex < count)
+			ft_printf("\n");
+		pr++;
+	}
+}
+
+static void				print_protocol(struct s_protocol *const p, const int index, const char *const parent)
+{
+	if (parent)
+		ft_printf("############################ [%d] %s(%s)\n", index, p->name, parent);
 	else
+		ft_printf("############################ [%d] %s\n", index, p->name);
+	ft_printf("%22s %016llx\n", "isa", p->protocol->isa);
+	ft_printf("%22s %016llx\n", "protocols", p->protocol->protocols);
+	ft_printf("%22s %016llx\n", "instance_methods", p->protocol->instance_methods);
+	_print_method(p->instance_methods, p->instance_methods_count);
+	ft_printf("%22s %016llx\n", "class_methods", p->protocol->class_methods);
+	_print_method(p->class_methods, p->class_methods_count);
+	ft_printf("%22s %016llx\n", "optional_insta_methods", p->protocol->optional_instance_methods);
+	_print_method(p->o_instance_methods, p->o_instance_methods_count);
+	ft_printf("%22s %016llx\n", "optional_class_methods", p->protocol->optional_class_methods);
+	_print_method(p->o_class_methods, p->o_class_methods_count);
+	ft_printf("%22s %016llx\n", "instance_properties", p->protocol->instance_properties);
+	if (p->properties_count)
+		_print_properties(p->properties, p->properties_count);
+	ft_printf("%22s %08x\n", "size", p->protocol->size);
+	ft_printf("%22s %08x\n", "flags", p->protocol->flags);
+	ft_printf("%22s %016llx\n", "extended_method_types", p->protocol->extended_method_types);
+	if (p->protocols_count)
+	{
+		int				i = 0;
+
+		while (i < p->protocols_count)
+		{
+			print_protocol(p->protocols + i, index * 100 + i, p->name);
+			i++;
+		}
+	}
+}
+
+static void				print_class(struct s_class *const c, const int index, const char *const parent)
+{
+	if (index == -1)
+		ft_printf("SUPERCLASS     >-------> %s: %s\n", parent, c->name);
+	else if (index == -2)
+		ft_printf("METACLASS      >-------> %s meta %s\n", parent, c->name);
+	else
+	{
 		ft_printf("---------------------- [%d] %s\n", index, c->name);
+	}
 	ft_printf("%22s %s\n", "is Swift", c->isswift ? "true" : "false");
 	ft_printf("%22s %016llx\n", "value", c->value);
 	ft_printf("%22s %016llx\n", "isa", c->class->isa);
@@ -64,55 +147,15 @@ static void				print_class(struct s_class *const c, const int index)
 		ft_printf("%22s %016llx\n", "base_properties", c->ro->base_properties);
 	}
 	if (c->methods)
-	{
-		mindex = 0;
-		m = c->methods;
-		while (mindex < c->methods_count)
-		{
-			ft_printf("%28s ---------------------\n", "");
-			ft_printf("%28s - %016llx %s\n", "name", m->method->name, m->name);
-			ft_printf("%28s - %016llx %s\n", "types", m->method->types, m->types);
-			ft_printf("%28s - %016llx\n", "imp", m->method->imp);
-			if (++mindex >= c->methods_count)
-				ft_printf("%28s ---------------------\n", "");
-			m++;
-		}
-	}
+		_print_method(c->methods, c->methods_count);
 	if (c->instances)
-	{
-		ivarsindex = 0;
-		ivars = c->instances;
-		ft_printf("%28s instances { %d }\n", "", c->instances_count);
-		while (ivarsindex < c->instances_count)
-		{
-			ft_printf("%28s %016llx\n", "offset", ivars->ivar->offset);
-			ft_printf("%28s %016llx %s\n", "name", ivars->ivar->name, ivars->name);
-			ft_printf("%28s %016llx %s\n", "type", ivars->ivar->type, ivars->type);
-			ft_printf("%28s %08x\n", "alignment", ivars->ivar->alignment);
-			ft_printf("%28s %08x\n", "size", ivars->ivar->size);
-			if (++ivarsindex < c->instances_count)
-				ft_printf("\n");
-			ivars++;
-		}
-	}
+		_print_instances(c->instances, c->instances_count);
 	if (c->properties)
-	{
-		prindex = 0;
-		pr = c->properties;
-		ft_printf("%28s properties { %d }\n", "", c->properties_count);
-		while (prindex < c->properties_count)
-		{
-			ft_printf("%28s %016llx %s\n", "name", pr->property->name, pr->name);
-			ft_printf("%28s %016llx %s\n", "attributes", pr->property->attributes, pr->attributes);
-			if (++prindex < c->properties_count)
-				ft_printf("\n");
-			pr++;
-		}
-	}
+		_print_properties(c->properties, c->properties_count);
 	if (c->superclass)
-	{
-		print_class(c->superclass, -1);
-	}
+		print_class(c->superclass, -1, c->name);
+	if (c->metaclass)
+		print_class(c->metaclass, -2, c->name);
 }
 
 void					dumper_generate_header(
@@ -139,7 +182,13 @@ void					dumper_generate_header(
 	while (index < dumper->class_count)
 	{
 		c = dumper->class + index;
-		print_class(c, index);
+		print_class(c, index, NULL);
+		index++;
+	}
+	index = 0;
+	while (index < dumper->protocols_count)
+	{
+		print_protocol(dumper->protocols + index, index, NULL);
 		index++;
 	}
 }

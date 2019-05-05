@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/04 16:34:57 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/05 16:35:51 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,35 @@
 
 # include "machoreader.h"
 # include "objective_c.h"
+
+typedef struct s_protocol			t_protocol;
+struct								s_protocol
+{
+	uint64_t						value;
+	char							*name;
+	struct s_objc_protocol			*protocol;
+
+	struct s_method					*class_methods;
+	int								class_methods_count;
+
+	struct s_method					*instance_methods;
+	int								instance_methods_count;
+
+	struct s_method					*o_class_methods;
+	int								o_class_methods_count;
+
+	struct s_method					*o_instance_methods;
+	int								o_instance_methods_count;
+
+	struct s_instance_var			*instances;
+	int								instances_count;
+
+	struct s_property				*properties;
+	int								properties_count;
+
+	struct s_protocol				*protocols;
+	int								protocols_count;
+};
 
 struct								s_property
 {
@@ -57,6 +86,7 @@ struct								s_class
 	int								properties_count;
 
 	struct s_class					*superclass;
+	struct s_class					*metaclass;
 };
 
 struct								s_dumper
@@ -78,6 +108,9 @@ struct								s_dumper
 
 	struct s_class					*class;
 	int								class_count;
+
+	struct s_protocol				*protocols;
+	int								protocols_count;
 };
 
 void								dumper_show_lc_encryption(char **argv);
@@ -90,18 +123,26 @@ void								dumper_read_class(
 		struct s_dumper *const dumper,
 		struct s_macho_binary *const bin,
 		struct s_macho *const macho);
+void								dumper_read_protocols(
+		struct s_dumper *const dumper,
+		struct s_macho_binary *const bin,
+		struct s_macho *const macho);
+void								read_protocols(
+		struct s_macho_binary *const bin,
+		struct s_macho *const macho,
+		const uint64_t value,
+		struct s_protocol **const protocols, int *const protocols_count);
 void								dumper_read_methods(
-		struct s_dumper *const dumper,
-		struct s_macho *const macho,
-		struct s_class *const c);
+		struct s_macho *const macho, const uint64_t value,
+		struct s_method **const methods, int *const count);
 void								dumper_read_instances(
-		struct s_dumper *const dumper,
 		struct s_macho *const macho,
-		struct s_class *const c);
+		const uint64_t value,
+		struct s_instance_var **const ivars, int *const count);
 void								dumper_read_properties(
-		struct s_dumper *const dumper,
 		struct s_macho *const macho,
-		struct s_class *const c);
+		const uint64_t value,
+		struct s_property **const properties, int *const count);
 
 char								*section_addr_name(
 		struct s_macho *const macho,

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 10:54:11 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/04 16:42:23 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/05 15:36:38 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,20 @@ static void							read_class(
 		if (macho->isswap)
 			swap_class_ro(c->ro);
 		c->name = section_addr_name(macho, c->ro->name);
-		dumper_read_methods(dumper, macho, c);
-		dumper_read_instances(dumper, macho, c);
-		dumper_read_properties(dumper, macho, c);
-		if (c->class->superclass)
+		dumper_read_methods(macho, c->ro->base_methods, &c->methods, &c->methods_count);
+		dumper_read_instances(macho, c->ro->ivars, &c->instances, &c->instances_count);
+		dumper_read_properties(macho, c->ro->base_properties, &c->properties, &c->properties_count);
+		if (c->class->superclass && !(c->ro->flags & RO_META))
 		{
 			c->superclass = ft_memalloc(sizeof(struct s_class));
 			c->superclass->value = c->class->superclass;
 			read_class(dumper, bin, macho, c->superclass);
+		}
+		if (c->class->isa && !(c->ro->flags & RO_META))
+		{
+			c->metaclass = ft_memalloc(sizeof(struct s_class));
+			c->metaclass->value = c->class->isa;
+			read_class(dumper, bin, macho, c->metaclass);
 		}
 	}
 }

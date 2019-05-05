@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/04 14:22:29 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/05 13:50:02 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ static inline void				dumper_process_generate(
 		struct s_macho_binary *const bin,
 		struct s_macho *const macho)
 {
+	if (g_dumper.proto_list)
+		dumper_read_protocols(&g_dumper, bin, macho); // bin->error ???
 	dumper_read_class(&g_dumper, bin, macho);
 	dumper_generate_header(&g_dumper, bin);
 	if (bin->error)
