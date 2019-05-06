@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/05 13:50:02 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/06 10:37:17 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ static inline void				dumper_process_generate(
 {
 	if (g_dumper.proto_list)
 		dumper_read_protocols(&g_dumper, bin, macho); // bin->error ???
+	if (g_dumper.cat_list)
+		dumper_read_categories(&g_dumper, bin, macho);
 	dumper_read_class(&g_dumper, bin, macho);
 	dumper_generate_header(&g_dumper, bin);
 	if (bin->error)

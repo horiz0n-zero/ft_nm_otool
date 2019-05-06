@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 10:56:48 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/04 10:36:06 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/06 13:26:52 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@ int									ft_strcmp(const char *s1, const char *s2);
 int									ft_strncmp(const void *const p1, const void *const p2, int length);
 void								*ft_memalloc(size_t size);
 int									ft_atoi(const char *src);
+char								*ft_static_itoa(int number);
 char								*str_push(const char *src, char *ptr);
 char								*number_push(int number, char *ptr);
 void								ft_memmove(
 		const void *src,
 		void *dst,
 		size_t size);
+char								*static_strjoins(int count, ...);
 
 struct								s_argument
 {

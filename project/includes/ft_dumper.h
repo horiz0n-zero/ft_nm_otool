@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/05 16:35:51 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/06 16:09:42 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,25 @@ struct								s_class
 	struct s_class					*metaclass;
 };
 
+struct								s_category
+{
+	uint64_t						value;
+	char							*name;
+	struct s_objc_category			*category;
+
+	struct s_method					*instance_methods;
+	int								instance_methods_count;
+
+	struct s_method					*class_methods;
+	int								class_methods_count;
+
+	struct s_protocol				*protocols;
+	int								protocols_count;
+
+	struct s_property				*properties;
+	int								properties_count;
+};
+
 struct								s_dumper
 {
 	int								flags;
@@ -111,6 +130,9 @@ struct								s_dumper
 
 	struct s_protocol				*protocols;
 	int								protocols_count;
+
+	struct s_category				*categories;
+	int								categories_count;
 };
 
 void								dumper_show_lc_encryption(char **argv);
@@ -143,6 +165,10 @@ void								dumper_read_properties(
 		struct s_macho *const macho,
 		const uint64_t value,
 		struct s_property **const properties, int *const count);
+void								dumper_read_categories(
+		struct s_dumper *const dumper,
+		struct s_macho_binary *const bin,
+		struct s_macho *const macho);
 
 char								*section_addr_name(
 		struct s_macho *const macho,
@@ -158,9 +184,16 @@ struct s_section					*section_addr_location(
 void								dumper_generate_header(
 		struct s_dumper *const dumper,
 		struct s_macho_binary *const bin);
+void								dumper_generate_protocols(struct s_dumper *const dumper);
+void								dumper_generate_class(struct s_dumper *const dumper);
+
+char								*protocols_list(struct s_protocol *protocols, int count);
+void								dumper_generate_methods(struct s_dumper *const dumper,
+		struct s_method *methods, int count,
+		const int isclass, const char *const prefix);
 
 // debug
 void								dumper_fatal(const char *const error);
-
+void								dumper_debug_print(struct s_dumper *const dumper);
 
 #endif
