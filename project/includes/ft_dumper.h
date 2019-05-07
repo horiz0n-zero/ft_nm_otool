@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/06 16:09:42 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/07 10:18:23 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,9 @@ struct								s_class
 
 	struct s_property				*properties;
 	int								properties_count;
+
+	struct s_protocol				*protocols;
+	int								protocols_count;
 
 	struct s_class					*superclass;
 	struct s_class					*metaclass;
@@ -191,6 +194,14 @@ char								*protocols_list(struct s_protocol *protocols, int count);
 void								dumper_generate_methods(struct s_dumper *const dumper,
 		struct s_method *methods, int count,
 		const int isclass, const char *const prefix);
+void								dumper_generate_instances(
+		struct s_dumper *const dumper,
+		struct s_instance_var *ivars, int count,
+		const char *const prefix);
+void								dumper_generate_properties(
+		struct s_dumper *const dumper,
+		struct s_property *properties, int count,
+		const char *const prefix);
 
 // debug
 void								dumper_fatal(const char *const error);

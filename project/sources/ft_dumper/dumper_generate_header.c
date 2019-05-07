@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/01 10:09:50 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/06 16:05:28 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/06 16:17:55 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,3 @@ void					dumper_generate_header(
 		dumper_generate_protocols(dumper);
 	dumper_generate_class(dumper);
 }
-
-
-
-
-
-
-
-

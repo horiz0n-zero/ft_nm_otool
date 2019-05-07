@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 10:54:11 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/06 10:38:17 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/07 09:30:08 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,10 @@ static void							read_class(
 		dumper_read_methods(macho, c->ro->base_methods, &c->methods, &c->methods_count);
 		dumper_read_instances(macho, c->ro->ivars, &c->instances, &c->instances_count);
 		dumper_read_properties(macho, c->ro->base_properties, &c->properties, &c->properties_count);
+		if (c->ro->base_protocols)
+		{
+			read_protocols(bin, macho, c->ro->base_protocols, &c->protocols, &c->protocols_count);
+		}
 		if (c->class->superclass && !(c->ro->flags & RO_META))
 		{
 			c->superclass = ft_memalloc(sizeof(struct s_class));
