@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/06 10:37:17 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/07 15:04:11 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static void						dumper_process(const char *const file)
 	int							index;
 
 	if (g_dumper.flags & DUMPER_O)
-		if ((g_dumper.fdoutput = open(g_dumper.output, O_WRONLY | O_CREAT | O_TRUNC, S_IWOTH | S_IROTH | S_IWGRP | S_IRGRP)) < 0)
+		if ((g_dumper.fdoutput = open(g_dumper.output, O_RDWR | O_CREAT | O_TRUNC, S_IWOTH | S_IROTH | S_IWGRP | S_IRGRP)) < 0)
 			return ((void)(ft_fprintf(STDERR_FILENO, "ft_dumper: cannot create %s\n", g_dumper.output)));
 	bin = get_macho_binary(file);
 	if (bin->error)

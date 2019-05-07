@@ -6,11 +6,25 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 10:54:11 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/07 09:30:08 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/07 15:03:07 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_dumper.h"
+
+static void							look_superclass(
+		struct s_macho *const macho,
+		const uint64_t value)
+{
+	int								i;
+
+	i = 0;
+	while (i < macho->symbols_count)
+	{
+		ft_printf("%16s %016llx %016llx\n", macho->symbols[i].name, macho->symbols[i].value, value);
+		i++;
+	}
+}
 
 static void							read_class(
 		struct s_dumper *const dumper,
@@ -46,6 +60,8 @@ static void							read_class(
 			c->superclass->value = c->class->superclass;
 			read_class(dumper, bin, macho, c->superclass);
 		}
+		else if (!(c->ro->flags & RO_META))
+			look_superclass(macho, c->value);
 		if (c->class->isa && !(c->ro->flags & RO_META))
 		{
 			c->metaclass = ft_memalloc(sizeof(struct s_class));
