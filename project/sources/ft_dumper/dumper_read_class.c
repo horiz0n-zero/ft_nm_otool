@@ -6,24 +6,40 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 10:54:11 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/07 15:03:07 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/08 10:39:14 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_dumper.h"
 
-static void							look_superclass(
+static char							*search_undefined_superclass(
 		struct s_macho *const macho,
 		const uint64_t value)
 {
 	int								i;
+	static const char				prefix[] = "_OBJC_CLASS_$_";
+	char							*ptr;
+	const char						*str;
 
 	i = 0;
 	while (i < macho->symbols_count)
 	{
-		ft_printf("%16s %016llx %016llx\n", macho->symbols[i].name, macho->symbols[i].value, value);
+		if (macho->symbols[i].value == value)
+		{
+			ptr = macho->symbols[i].name;
+			str = prefix;
+			while (*ptr && *str && *str == *ptr)
+			{
+				ptr++;
+				str++;
+			}
+			if (!*str && *ptr)
+				return (ptr);
+			return (NULL);
+		}
 		i++;
 	}
+	return (NULL);
 }
 
 static void							read_class(
@@ -51,17 +67,16 @@ static void							read_class(
 		dumper_read_instances(macho, c->ro->ivars, &c->instances, &c->instances_count);
 		dumper_read_properties(macho, c->ro->base_properties, &c->properties, &c->properties_count);
 		if (c->ro->base_protocols)
-		{
 			read_protocols(bin, macho, c->ro->base_protocols, &c->protocols, &c->protocols_count);
-		}
 		if (c->class->superclass && !(c->ro->flags & RO_META))
 		{
 			c->superclass = ft_memalloc(sizeof(struct s_class));
 			c->superclass->value = c->class->superclass;
 			read_class(dumper, bin, macho, c->superclass);
+			c->superclass_name = c->superclass->name;
 		}
 		else if (!(c->ro->flags & RO_META))
-			look_superclass(macho, c->value);
+			c->superclass_name = search_undefined_superclass(macho, c->value);
 		if (c->class->isa && !(c->ro->flags & RO_META))
 		{
 			c->metaclass = ft_memalloc(sizeof(struct s_class));

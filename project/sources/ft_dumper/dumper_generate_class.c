@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 16:03:32 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/07 10:21:32 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/08 09:02:29 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@ static inline void	generate_class_header(
 		struct s_dumper *const dumper,
 		struct s_class *const c)
 {
-	char *const		super = c->superclass ? c->superclass->name : "NSObject";
-
 	if (c->instances)
 	{
-		ft_fprintf(dumper->fdoutput, "@interface %s: %s%s {\n", c->name, super,
+		ft_fprintf(dumper->fdoutput, "@interface %s: %s%s {\n", c->name,
+			c->superclass_name ? c->superclass_name : "NSObject",
 			c->protocols ? protocols_list(c->protocols, c->protocols_count) : "");
 		dumper_generate_instances(dumper, c->instances, c->instances_count, "\t");
 		ft_fprintf(dumper->fdoutput, "}\n\n");
 	}
 	else
 	{
-		ft_fprintf(dumper->fdoutput, "@interface %s: %s%s\n\n", c->name, super,
+		ft_fprintf(dumper->fdoutput, "@interface %s: %s%s\n\n", c->name,
+			c->superclass_name ? c->superclass_name : "NSObject",
 			c->protocols ? protocols_list(c->protocols, c->protocols_count) : "");
 	}
 }

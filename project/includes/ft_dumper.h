@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/07 10:18:23 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/08 12:48:08 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ struct								s_class
 	int								protocols_count;
 
 	struct s_class					*superclass;
+	char							*superclass_name;
 	struct s_class					*metaclass;
 };
 
@@ -118,6 +119,7 @@ struct								s_dumper
 # define DUMPER_S 1 << 1
 # define DUMPER_U 1 << 2
 # define DUMPER_F 1 << 3
+# define DUMPER_B 1 << 4
 
 	int								fdoutput;
 	char							*output;
@@ -206,5 +208,11 @@ void								dumper_generate_properties(
 // debug
 void								dumper_fatal(const char *const error);
 void								dumper_debug_print(struct s_dumper *const dumper);
+
+struct								s_type_desc
+{
+	const char						*type_native;
+	const char						*type_bits;
+};
 
 #endif

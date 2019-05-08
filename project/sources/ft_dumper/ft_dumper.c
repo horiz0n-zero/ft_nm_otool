@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/07 15:04:11 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/08 11:15:02 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static const struct s_argument	g_arguments[256] =
 	['o'] = {"output", DUMPER_O, 1, &g_dumper.output},
 	['s'] = {"show-crypt", DUMPER_S, 0, NULL},
 	['u'] = {"uuid", DUMPER_U, 0, NULL},
-	['f'] = {"force", DUMPER_F, 0, NULL}
+	['f'] = {"force", DUMPER_F, 0, NULL},
+	['b'] = {"bytes-count-type", DUMPER_B, 0, NULL}
 };
 
 static const char				*g_usages[] =
@@ -42,7 +43,8 @@ static const char				*g_usages[] =
 	"-u --uuid                 Show Universally Unique IDentifier (UUID)\n",
 	"                          a 128-bit value guaranteed to be unique over both space and time.\n"
 	"-f --force                Force the generation of the header,\n",
-	"                          even if LC_ENCRYPTION is set. this option can cause a crash or a bad result\n"
+	"                          even if LC_ENCRYPTION is set. this option can cause a crash or a bad result\n",
+	"-b --bits--type           don't use native types use types that contain bits like intx_t uintx_t\n"
 };
 
 static void						dumper_usage(void)
@@ -78,7 +80,7 @@ static void						dumper_process(const char *const file)
 	int							index;
 
 	if (g_dumper.flags & DUMPER_O)
-		if ((g_dumper.fdoutput = open(g_dumper.output, O_RDWR | O_CREAT | O_TRUNC, S_IWOTH | S_IROTH | S_IWGRP | S_IRGRP)) < 0)
+		if ((g_dumper.fdoutput = open(g_dumper.output, O_RDWR | O_CREAT | O_TRUNC, S_IWUSR | S_IRUSR | S_IRGRP | S_IROTH)) < 0)
 			return ((void)(ft_fprintf(STDERR_FILENO, "ft_dumper: cannot create %s\n", g_dumper.output)));
 	bin = get_macho_binary(file);
 	if (bin->error)
@@ -96,6 +98,8 @@ static void						dumper_process(const char *const file)
 		else
 			dumper_process_generate(bin, bin->macho + index);
 	}
+	if (g_dumper.fdoutput != STDOUT_FILENO)
+		close(g_dumper.fdoutput);
 	unget_macho_binary(bin);
 }
 
