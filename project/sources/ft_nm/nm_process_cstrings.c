@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 16:07:39 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/01 16:03:54 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/08 15:13:50 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ static void							cstrings_file(
 				proc(statics->macho, SEG_TEXT, "__cstring");
 				proc(statics->macho, SEG_TEXT, "__objc_methname");
 				proc(statics->macho, SEG_TEXT, "__objc_classname");
+				proc(statics->macho, SEG_TEXT, "__objc_methtype");
+				proc(statics->macho, SEG_TEXT, "__oslogstring");
 				statics = statics->next;
 			}
 		}
@@ -100,6 +102,8 @@ static void							cstrings_file(
 			proc(bin->macho + index, SEG_TEXT, "__cstring");
 			proc(bin->macho + index, SEG_TEXT, "__objc_methname");
 			proc(bin->macho + index, SEG_TEXT, "__objc_classname");
+			proc(bin->macho + index, SEG_TEXT, "__objc_methtype");
+			proc(bin->macho + index, SEG_TEXT, "__oslogstring");
 		}
 		++index;
 	}

@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:04:06 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/08 11:15:02 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/09 09:17:21 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,18 @@ static struct s_dumper			g_dumper =
 	0,
 	STDOUT_FILENO,
 	NULL,
-
-	NULL,
-	NULL,
 	NULL,
 
 	NULL,
-	0
+	NULL,
+	NULL,
+
+	NULL,
+	0,
+	NULL,
+	0,
+	NULL,
+	0,
 };
 
 static const struct s_argument	g_arguments[256] =

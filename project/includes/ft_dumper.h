@@ -6,7 +6,7 @@
 /*   By: afeuerst <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 11:03:19 by afeuerst          #+#    #+#             */
-/*   Updated: 2019/05/08 12:48:08 by afeuerst         ###   ########.fr       */
+/*   Updated: 2019/05/09 10:12:19 by afeuerst         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ struct								s_category
 	int								properties_count;
 };
 
+typedef struct s_type				t_type;
 struct								s_dumper
 {
 	int								flags;
@@ -214,5 +215,12 @@ struct								s_type_desc
 	const char						*type_native;
 	const char						*type_bits;
 };
+
+const char							*get_primitive_type(
+		struct s_dumper *const dumper,
+		char *attributes, char **const ptr);
+const char							*get_primitive_instance_type(
+		struct s_dumper *const dumper,
+		char *types, int *const isarray);
 
 #endif
